@@ -5,5 +5,6 @@ from shop import app
 def home():
     return render_template("home.html", title="Shop")
 
-@app.route('/')
-def shopping_basket():
+@app.route('/basket/<int:BasketId>')
+def shopping_basket(BasketId):
+    basket=Basket.query().get_or_404(BasketId)

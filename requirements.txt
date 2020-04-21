@@ -19,3 +19,4 @@ WTForms==2.2.1
 gunicorn==20.0.4
 Flask-Login==0.4.1
 Flask-Admin==1.5.4
+Flask-Nav==0.6

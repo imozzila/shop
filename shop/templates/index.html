@@ -3,12 +3,25 @@
 
 <head>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}">
+  <link href="https://fonts.googleapis.com/css?family=Baloo+Thambi|Coiny|Fredoka+One" rel="stylesheet">
 </head>
 
 <body>
-  {% block content %}
+  <div class="container">
+  <div class="leftside">
+  </div>
+    <div class="content">
+      <div class="banner">
+        <div class="first"><a href={{url_for(pages[page_list[0]])}}><div> {{page_list[0]}}</div> </a></div>
+        <div class="second"><a href={{url_for(pages[page_list[1]])}}> <div>{{page_list[1]}}</div> </a></div>
+        <div class="third"><a href={{url_for(pages[page_list[2]])}}><div> {{page_list[2]}}</div> </a></div>
+        <div class="fourth"><a href={{url_for(pages[page_list[3]])}}><div> {{page_list[3]}}</div> </a></div>
+      </div>
+      {% block content %}
 
-  {%  endblock % }
+      {%  endblock %}
+    </div>
+  </div>
 </body>
 
 <footer>

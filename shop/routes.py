@@ -7,7 +7,7 @@ pages= {'Home':'home', 'Basket':'shopping_basket', 'Log-In':'login', 'Sign-Up':'
 @app.route('/')
 @app.route('/home')
 def home():
-    return render_template('index.html', pages=pages, page_list=list(pages.keys()))
+    return render_template('home.html', pages=pages, page_list=list(pages.keys()))
 
 @app.route('/basket/')
 def shopping_basket():

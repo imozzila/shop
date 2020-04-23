@@ -7,19 +7,30 @@
 </head>
 
 <body>
-  <div class="container">
-  <div class="leftside">
-  </div>
-    <div class="content">
-      <div class="banner">
-        <div class="first"><a href={{url_for(pages[page_list[0]])}}><div> {{page_list[0]}}</div> </a></div>
-        <div class="second"><a href={{url_for(pages[page_list[1]])}}> <div>{{page_list[1]}}</div> </a></div>
-        <div class="third"><a href={{url_for(pages[page_list[2]])}}><div> {{page_list[2]}}</div> </a></div>
-        <div class="fourth"><a href={{url_for(pages[page_list[3]])}}><div> {{page_list[3]}}</div> </a></div>
-      </div>
-      {% block content %}
 
-      {%  endblock %}
+  <div class="container">
+    <div class="banner">
+      <div class="first"><a href={{url_for(pages[page_list[0]])}}><div> {{page_list[0]}}</div> </a></div>
+      <div class="second"><a href={{url_for(pages[page_list[1]])}}> <div>{{page_list[1]}}</div> </a></div>
+      <div class="third"><a href={{url_for(pages[page_list[2]])}}><div> {{page_list[2]}}</div> </a></div>
+      <div class="fourth"><a href={{url_for(pages[page_list[3]])}}><div> {{page_list[3]}}</div> </a></div>
+    </div>
+
+    <div class="sub_banner">
+      {% block sub_banner %}
+
+      {% endblock sub_banner %}
+    </div>
+
+    <div class="leftside">
+    </div>
+    <div class="content">
+      {% block content %}
+      {%  endblock content %}
+    </div>
+
+    <div class="rightside">
+
     </div>
   </div>
 </body>

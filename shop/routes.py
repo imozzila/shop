@@ -1,9 +1,10 @@
-from flask import render_template, url_for, redirect
+from flask import render_template, url_for, redirect, jsonify, request
 from shop import app, db, forms, login_manager
 from shop.models import Item, User, Basket, WishList
 from flask_login import login_required, login_user, current_user
 
-pages= {'Home':'home', 'Basket':'shopping_basket', 'Log-In':'login', 'Sign-Up':'signup'}
+pages= {'The Little Cheese':'home', 'Basket':'shopping_basket', 'Log-In':'login', 'Sign-Up':'signup'}
+
 @app.route('/')
 @app.route('/home')
 def home():
@@ -36,12 +37,22 @@ def login():
     form = forms.LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(UserName=form.username.data).first()
+        print(user)
         if user:
             if user.UserPassword == form.password.data:
                 login_user(user)
                 return redirect(url_for('shopping_basket'))
         return '<h1>Invalid username or password.</h1>'
     return render_template('login.html', form=form, pages=pages, page_list=list(pages.keys()))
+
+@app.route('/search', methods=["POST"])
+def search():
+    itemResults = []
+    query = request.form.get("search", 0, type=str)
+    queryResults = Item.query.filter(Item.ItemName.like(query+'%'))
+    for item in queryResults:
+        itemResults.append(item.ItemName)
+    return jsonify(result=itemResults)
 
 @login_manager.user_loader
 def load_user(user_id):

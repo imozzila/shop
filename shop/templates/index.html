@@ -2,8 +2,12 @@
 <html>
 
 <head>
+
+
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}">
   <link href="https://fonts.googleapis.com/css?family=Baloo+Thambi|Coiny|Fredoka+One" rel="stylesheet">
+
+
 </head>
 
 <body>
@@ -14,15 +18,28 @@
 
     <div class="leftside">
       <div class="countries">
-        Countries
-        <ul>
-          <li>United States</li>
-          <li>Italy</li>
-          <li>United Kingdom</li>
-          <li>Netherlands</li>
-          <li>Switzerland</li>
-          <li>France</li>
-        </ul>
+          Countries
+          <div class="dropdown_information">
+            <a href="#">United States</a>
+            <a href="#">Italy</a>
+            <a href="#">United Kingdom</a>
+            <a href="#">Netherlands</a>
+            <a href="#">Switzerland</a>
+            <a href="#">France</a>
+          </div>
+
+      </div>
+      <div class="types">
+          Types of Cheese
+          <div class="dropdown_information">
+            <a href="#">Hard Cheese</a>
+            <a href="#">Semi Hard Cheese</a>
+            <a href="#">Goat Cheese</a>
+            <a href="#">Blue Cheese</a>
+            <a href="#">Soft Cheese</a>
+            <a href="#">Fresh Cheese</a>
+          </div>
+
       </div>
     </div>
 
@@ -36,7 +53,11 @@
     <div class="content">
       <div class="sub_banner">
         {% block sub_banner %}
-
+        <form id="search_bar">
+        <input name="search" size=50 type="search" placeholder="Search for an item here"></input>
+        <input type="submit" value="Search">
+        </form>
+        <div id="result"></div>
         {% endblock sub_banner %}
       </div>
       {% block content %}
@@ -51,7 +72,27 @@
 </body>
 
 <footer>
+  {% block script %}
+  <script type="text/javascript">
+    function addSubmit(ev) {
+      ev.preventDefault();
+      var request = new XMLHttpRequest();
+      request.addEventListener('load', addShow);
+      request.open('POST', {{ url_for('search')|tojson }});
+      request.send(new FormData(this));
+    }
 
+    function addShow() {
+      console.log(data)
+      var data = JSON.parse(this.responseText);
+      var span = document.getElementById('result');
+      span.innerHTML = data.result;
+    }
+
+    var form = document.getElementById('search_bar');
+    form.addEventListener('submit', addSubmit);
+  </script>
+  {% endblock script %}
 </footer>
 
 </html>

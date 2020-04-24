@@ -8,7 +8,7 @@ body{
 	"banner banner banner"
 	"leftside content rightside";
 
-	grid-template-columns: 1fr 8fr 1fr;
+	grid-template-columns: 1fr 4fr 1fr;
 }
 
 .banner{
@@ -58,7 +58,46 @@ height:75px;
 	width:100%;
 	box-sizing:border-box;
 	grid-area:leftside;
+	font-size:30px;
 }
 .rightside{
 	grid-area:rightside;
+}
+
+.dropdown_information {
+	position:relative;
+	top:-5px;
+	left:50px;
+	padding-left:30px;
+	font-size:20px;
+	display:grid;
+	height:0px;
+	opacity: 0;
+	transition: opacity 0.1s linear;
+	overflow:hidden;
+	z-index:100;
+
+}
+
+.dropdown_information a{
+	text-align:center;
+	padding:5px;
+  background-color:#f5bb1d;
+	box-sizing:border-box;
+	color:black;
+	border-style: solid;
+	text-decoration:none;
+}
+.leftside > div{
+	position:absolute;
+}
+.countries{
+	top:150px;
+}
+.types{
+	top:185px;
+}
+.leftside > div:hover > .dropdown_information{
+	height:auto;
+	opacity: 1;
 }

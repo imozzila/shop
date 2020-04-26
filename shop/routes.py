@@ -24,7 +24,8 @@ def shopping_basket():
 
     user = load_user(current_user.UserId)
     pages = organise_pages()
-    #basket=Basket.query().get_or_404(BasketId)
+    basket = Basket.query.filter_by(UserId=user.UserId).first()
+    print(basket)
     return render_template('basket.html', pages=pages, page_list=list(pages.keys()))
 
 @app.route('/checkout/<int:BasketId>')

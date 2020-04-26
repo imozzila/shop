@@ -20,7 +20,7 @@ class User(UserMixin, db.Model):
         return self.UserId
 
 class Basket(db.Model):
-    BasketId = db.Column(db.Integer, primary_key=True, nullable=False)
+    EntryId = db.Column(db.Integer, primary_key=True, nullable=False)
     UserId = db.Column(db.Integer, db.ForeignKey("User.UserId"), nullable=False)
     ItemId = db.Column(db.Integer, db.ForeignKey("Item.ItemId"), nullable=False)
 

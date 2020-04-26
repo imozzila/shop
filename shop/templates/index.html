@@ -83,10 +83,14 @@
     }
 
     function addShow() {
-      console.log(data)
       var data = JSON.parse(this.responseText);
+      console.log(data)
       var span = document.getElementById('result');
-      span.innerHTML = data.result;
+      span.innerHTML = "";
+      for(i=0;i<data.result.length;i++){
+        span.innerHTML += data.result[i]+"<br>";
+      }
+
     }
 
     var form = document.getElementById('search_bar');

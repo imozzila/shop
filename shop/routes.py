@@ -21,6 +21,7 @@ def home():
 
 @app.route('/basket/')
 def shopping_basket():
+
     user = load_user(current_user.UserId)
     pages = organise_pages()
     #basket=Basket.query().get_or_404(BasketId)
@@ -35,7 +36,7 @@ def checkout(BasketId):
     return render_template('checkout.html')
 @app.route('/signup', methods=['GET','POST'])
 def signup():
-    organise_pages()
+    pages = organise_pages()
     form = forms.RegisterForm()
     if form.validate_on_submit():
         new_user = User(UserName=form.username.data, UserEmail=form.email.data, UserPassword=form.password.data)
@@ -70,8 +71,8 @@ def search():
 @app.route('/settings')
 @login_required
 def settings():
-    organise_pages()
-    pass
+    pages = organise_pages()
+    return render_template('admin.html', pages=pages, page_list=list(pages.keys()))
 
 @app.route('/logout')
 @login_required

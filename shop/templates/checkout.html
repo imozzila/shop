@@ -1,5 +1,54 @@
 {% extends "index.html" %}
 {% block content %}
+  <form method="POST" action="{{url_for('checkout')}}">
+    {{ form.csrf_token }}
+    {{ form.Firstname.label }}
+    {{ form.Firstname }}
+    <br/>
+    <br/>
+    {{ form.Lastname.label }}
+    {{ form.Lastname }}
+    <br/>
+    <br/>
+    {{ form.Phonenumber.label }}
+    {{ form.Phonenumber(type="number") }}
+    <br/>
+    <br/>
+    {{ form.Postcode.label }}
+    {{ form.Postcode }}
+    <br/>
+    <br/>
+    {{ form.AddressLine1.label }}
+    {{ form.AddressLine1 }}
+    <br/>
+    <br/>
+    {{ form.TC.label }}
+    {{ form.TC }}
+    <br/>
+    <br/>
+    {{ form.County.label }}
+    {{ form.County }}
+    <br/>
+    <br/>
+    {{ form.Nameoncard.label }}
+    {{ form.Nameoncard }}
+    <br/>
+    <br/>
+    {{ form.CardNumber.label }}
+    {{ form.CardNumber(type="number") }}
+    <br/>
+    <br/>
+    {{ form.Expirydate.label }}
+    {{ form.Expirydate(type="number", size=1) }}
+    {{ form.Expirydate(type="number", size=1) }}
+    <br/>
+    <br/>
+    {{ form.CVV.label }}
+    {{ form.CVV(type="number") }}
+    <br/>
+    <br/>
 
+    <input type="submit" value="Checkout">
+  </form>
 
-{% endblock content %}
+{% endblock %}

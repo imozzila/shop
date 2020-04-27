@@ -1,7 +1,7 @@
 {% extends "index.html" %}
 
 
-% block content %}
+{% block content %}
   <form method="POST" action="{{url_for('signup')}}">
     {{ form.csrf_token }}
     {{ form.username.label }}

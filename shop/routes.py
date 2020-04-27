@@ -5,6 +5,8 @@ from flask_login import login_required, login_user, current_user, logout_user
 from flask_bcrypt import Bcrypt, check_password_hash, generate_password_hash
 from flask_admin.contrib.sqla import ModelView
 
+bcrypt = Bcrypt(app)
+
 def organise_pages():
     if not current_user.is_anonymous:
         user = load_user(current_user.UserId)

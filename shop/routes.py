@@ -3,7 +3,6 @@ from shop import app, db, forms, login_manager
 from shop.models import Item, User, Basket, WishList
 from flask_login import login_required, login_user, current_user, logout_user
 
-
 def organise_pages():
     if not current_user.is_anonymous:
         user = load_user(current_user.UserId)
@@ -17,7 +16,8 @@ def organise_pages():
 @app.route('/home')
 def home():
     pages = organise_pages()
-    return render_template('home.html', pages=pages, page_list=list(pages.keys()))
+    item = Item.query.all()
+    return render_template('home.html', pages=pages, item=item, info=info, page_list=list(pages.keys()))
 
 @app.route('/basket/')
 def shopping_basket():
@@ -32,7 +32,6 @@ def shopping_basket():
 def checkout(BasketId):
     pages = organise_pages()
     basket=Basket.query().get_or_404(BasketId, pages=pages, page_list=list(pages.keys()))
-
     return render_template('checkout.html')
 @app.route('/signup', methods=['GET','POST'])
 def signup():
@@ -73,6 +72,12 @@ def search():
 def settings():
     pages = organise_pages()
     return render_template('admin.html', pages=pages, page_list=list(pages.keys()))
+
+@app.route('/info/<string:itemid>', methods=['GET'])
+def info(itemid):
+    pages = organise_pages()
+    item = Item.query.all()
+    return render_template('info.html', pages=pages, itemid=int(itemid)-1, item=item, page_list=list(pages.keys()))
 
 @app.route('/logout')
 @login_required

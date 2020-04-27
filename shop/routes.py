@@ -71,12 +71,13 @@ def search():
         itemResults.append(item.ItemName)
     return jsonify(result=itemResults)
 
-@app.route('/updateBasket', methods=["POST"])
+@app.route('/updateBasket/', methods=["GET","POST"])
 def updateBasket():
     user = load_user(current_user.UserId)
-    query = request.form.get()
-    
-    return jsonify(results=query)
+    itemId = request.args.get('item')
+    Basket.query.filter_by(UserId=user.UserId).filter_by(ItemId=itemId).delete()
+    db.session.commit()
+    return redirect('/basket')
 @app.route('/settings')
 @login_required
 def settings():

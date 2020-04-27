@@ -5,12 +5,12 @@ Basket:
 {%endblock%}
 {% block content %}
 <!-- We need a for loop here which prints each item in the basket-->
-<form id="basket" action="{{url_for('updateBasket')}}">
+<form method = "POST" id="basket">
 {% for item in contents %}
 <div name="{{item.ItemId}}">
   {{ item.ItemName }}
   {{ item.ItemPrice }}
-  <button type="submit" onsubmit="removeSelf({{item.ItemId}})">Remove</button>
+  <button type="submit" formaction="{{url_for('updateBasket')}}?item={{item.ItemId}}">Remove</button>
 </div>
 {% endfor %}
 </form>

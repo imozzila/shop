@@ -21,12 +21,14 @@ def home():
 
 @app.route('/basket/')
 def shopping_basket():
-
+    contents = []
     user = load_user(current_user.UserId)
     pages = organise_pages()
-    basket = Basket.query.filter_by(UserId=user.UserId).first()
-    print(basket)
-    return render_template('basket.html', pages=pages, page_list=list(pages.keys()))
+    basket = Basket.query.filter_by(UserId=user.UserId)
+    for entry in basket:
+        item = Item.query.filter_by(ItemId=entry.ItemId).first()
+        contents.append(item)
+    return render_template('basket.html', pages=pages, page_list=list(pages.keys()), contents=contents)
 
 @app.route('/checkout/<int:BasketId>')
 @login_required
@@ -69,6 +71,12 @@ def search():
         itemResults.append(item.ItemName)
     return jsonify(result=itemResults)
 
+@app.route('/updateBasket', methods=["POST"])
+def updateBasket():
+    user = load_user(current_user.UserId)
+    query = request.form.get()
+    
+    return jsonify(results=query)
 @app.route('/settings')
 @login_required
 def settings():
@@ -80,6 +88,7 @@ def settings():
 def logout():
     logout_user()
     return redirect('/home')
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))

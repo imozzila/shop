@@ -1,9 +1,27 @@
 {% extends "index.html" %}
+{% block sub_banner%}
+Basket:
 
+{%endblock%}
 {% block content %}
 <!-- We need a for loop here which prints each item in the basket-->
-<div>
-  ItemName, ItemPicture, Price
-  <button type="button">Remove</button>
+<form id="basket" action="{{url_for('updateBasket')}}">
+{% for item in contents %}
+<div name="{{item.ItemId}}">
+  {{ item.ItemName }}
+  {{ item.ItemPrice }}
+  <button type="submit" onsubmit="removeSelf({{item.ItemId}})">Remove</button>
 </div>
+{% endfor %}
+</form>
+{% endblock %}
+{% block script %}
+<script type="text/javascript">
+  function removeSelf(itemId){
+    var request = new XMLHttpRequest();
+    request.addEventListener('load', addShow);
+    request.open('POST', {{ url_for('updateBasket')|tojson }});
+    request.send(new FormData(itemId));
+  }
+</script>
 {% endblock %}

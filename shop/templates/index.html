@@ -62,8 +62,8 @@
       <div class="sub_banner">
         {% block sub_banner %}
         <form id="search_bar">
-        <input name="search" size=50 type="search" placeholder="Search for an item here"></input>
-        <input type="submit" value="Search">
+          <input name="search" size=50 type="search" placeholder="Search for an item here"></input>
+          <input type="submit" value="Search">
         </form>
         <div id="result"></div>
         {% endblock sub_banner %}
@@ -84,6 +84,7 @@
   <script type="text/javascript">
     function addSubmit(ev) {
       ev.preventDefault();
+      console.log('test')
       var request = new XMLHttpRequest();
       request.addEventListener('load', addShow);
       request.open('POST', {{ url_for('search')|tojson }});
@@ -102,7 +103,7 @@
     }
 
     var form = document.getElementById('search_bar');
-    form.addEventListener('submit', addSubmit);
+    form.addEventListener('onkeyup', addSubmit);
   </script>
   {% endblock script %}
 </footer>

@@ -1,5 +1,5 @@
 from flask import render_template, url_for, redirect, jsonify, request
-from shop import app, db, forms, login_manager
+from shop import app, db, forms, login_manager, checkout
 from shop.models import Item, User, Basket, WishList
 from flask_login import login_required, login_user, current_user, logout_user
 
@@ -28,13 +28,14 @@ def shopping_basket():
     print(basket)
     return render_template('basket.html', pages=pages, page_list=list(pages.keys()))
 
-@app.route('/checkout/<int:BasketId>')
-@login_required
-def checkout(BasketId):
+@app.route('/checkout', methods=['GET', 'POST'])
+def checkout():
     pages = organise_pages()
-    basket=Basket.query().get_or_404(BasketId, pages=pages, page_list=list(pages.keys()))
+    form = forms.Checkout()
+    if form.validate_on_submit():
+        return '<h1>Your order has been placed!</h1>'
+    return render_template('checkout.html', form=form, pages=pages, page_list=list(pages.keys()))
 
-    return render_template('checkout.html')
 @app.route('/signup', methods=['GET','POST'])
 def signup():
     pages = organise_pages()

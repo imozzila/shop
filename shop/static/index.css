@@ -1,5 +1,5 @@
 body{
-	background-color:#f9ffa3;
+	background-color:#1c912b;
 }
 .container{
 	display:grid;
@@ -39,7 +39,7 @@ height:75px;
 
 #search{
 	width: 100%;
-	height: 50px;
+	height: 100px;
 	text-align:center;
 	font-size:30px;
 	border-style:solid;

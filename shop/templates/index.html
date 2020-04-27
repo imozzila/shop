@@ -11,6 +11,14 @@
 </head>
 
 <body>
+  {% for items in item %}
+    <a href = '{{url_for('info', itemid = items.ItemId)}}'>{{ items.ItemName }}</a>
+  {% endfor %}
+
+
+
+
+
 
   <div class="container">
 

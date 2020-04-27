@@ -9,3 +9,4 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://c1930597:Kys123kys123@c
 db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
+admin = Admin(app)

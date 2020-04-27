@@ -2,7 +2,8 @@ from flask import render_template, url_for, redirect, jsonify, request
 from shop import app, db, forms, login_manager
 from shop.models import Item, User, Basket, WishList
 from flask_login import login_required, login_user, current_user, logout_user
-
+from flask_bcrypt import Bcrypt, check_password_hash, generate_password_hash
+from flask_admin.contrib.sqla import ModelView
 
 def organise_pages():
     if not current_user.is_anonymous:
@@ -42,10 +43,16 @@ def signup():
     pages = organise_pages()
     form = forms.RegisterForm()
     if form.validate_on_submit():
-        new_user = User(UserName=form.username.data, UserEmail=form.email.data, UserPassword=form.password.data)
-        db.session.add(new_user)
-        db.session.commit()
-        return '<h1>New user has been created!</h1>'
+        user = User.query.filter_by(UserName=form.username.data).first()
+        if user:
+            flash('The username already exists, please enter a different username.')
+            return render_template('signup.html', form=form)
+        else:
+        	password_hash = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        	new_user = User(UserName=form.username.data, UserEmail=form.email.data, UserPassword=password_hash)
+        	db.session.add(new_user)
+        	db.session.commit()
+        	return '<h1>New user has been created!</h1>'
     return render_template('signup.html', form=form, pages=pages, page_list=list(pages.keys()))
 
 @app.route('/login', methods=['GET','POST'])
@@ -78,6 +85,7 @@ def updateBasket():
     Basket.query.filter_by(UserId=user.UserId).filter_by(ItemId=itemId).delete()
     db.session.commit()
     return redirect('/basket')
+
 @app.route('/settings')
 @login_required
 def settings():

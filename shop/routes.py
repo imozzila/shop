@@ -63,9 +63,8 @@ def login():
     form = forms.LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(UserName=form.username.data).first()
-        print(user)
         if user:
-            if user.UserPassword == form.password.data:
+            if check_password_hash(user.UserPassword, form.password.data):
                 login_user(user)
                 return redirect(url_for('shopping_basket'))
         return '<h1>Invalid username or password.</h1>'

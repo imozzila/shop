@@ -25,6 +25,6 @@ class Basket(db.Model):
     ItemId = db.Column(db.Integer, db.ForeignKey("Item.ItemId"), nullable=False)
 
 class WishList(db.Model):
-    WishListId= db.Column(db.Integer, primary_key=True, nullable=False)
+    WishListId = db.Column(db.Integer, primary_key=True, nullable=False)
     UserId = db.Column(db.Integer, db.ForeignKey("User.UserId"), nullable=False)
     ItemId = db.Column(db.Integer, db.ForeignKey("Item.ItemId"), nullable=False)

@@ -1,4 +1,4 @@
-from flask import render_template, url_for, redirect, jsonify, request
+from flask import render_template, url_for, redirect, jsonify, request, flash
 from shop import app, db, forms, login_manager, checkout
 from shop.models import Item, User, Basket, WishList
 from flask_login import login_required, login_user, current_user, logout_user
@@ -24,14 +24,18 @@ def home():
 
 @app.route('/basket/')
 def shopping_basket():
-    contents = []
-    user = load_user(current_user.UserId)
-    pages = organise_pages()
-    basket = Basket.query.filter_by(UserId=user.UserId)
-    for entry in basket:
-        item = Item.query.filter_by(ItemId=entry.ItemId).first()
-        contents.append(item)
-    return render_template('basket.html', pages=pages, page_list=list(pages.keys()), contents=contents)
+    if not current_user.is_anonymous:
+        contents = []
+        user = load_user(current_user.UserId)
+        pages = organise_pages()
+        basket = Basket.query.filter_by(UserId=user.UserId)
+        totalprice = 0
+        for entry in basket:
+            item = Item.query.filter_by(ItemId=entry.ItemId).first()
+            totalprice += item.ItemPrice
+            contents.append(item)
+        return render_template('basket.html', pages=pages, page_list=list(pages.keys()), contents=contents, totalprice=totalprice)
+    return 'You are not logged in. You must be logged in to view basket.'
 
 @app.route('/checkout', methods=['GET', 'POST'])
 def checkout():
@@ -49,7 +53,6 @@ def signup():
         user = User.query.filter_by(UserName=form.username.data).first()
         if user:
             flash('The username already exists, please enter a different username.')
-            return render_template('signup.html', form=form)
         else:
         	password_hash = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         	new_user = User(UserName=form.username.data, UserEmail=form.email.data, UserPassword=password_hash)
@@ -64,9 +67,8 @@ def login():
     form = forms.LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(UserName=form.username.data).first()
-        print(user)
         if user:
-            if user.UserPassword == form.password.data:
+            if check_password_hash(user.UserPassword, form.password.data):
                 login_user(user)
                 return redirect(url_for('shopping_basket'))
         return '<h1>Invalid username or password.</h1>'

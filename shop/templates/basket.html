@@ -1,18 +1,30 @@
 {% extends "index.html" %}
+{% block link %}
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='basket.css') }}">
+{% endblock %}
 {% block sub_banner%}
-Basket:
+<div class="sub_first"></div>
+<div class="sub_second">Name</div>
+<div class="sub_third">Price</div>
 
 {%endblock%}
 {% block content %}
 <!-- We need a for loop here which prints each item in the basket-->
+<div class="basket">
 <form method = "POST" id="basket">
 {% for item in contents %}
-<div name="{{item.ItemId}}">
-  {{ item.ItemName }}
-  {{ item.ItemPrice }}
+<div class ="item" name="{{item.ItemId}}">
+  <img src="{{url_for('static', filename='images/'+item.ItemLink)}}" />
+  <div class="name">{{ item.ItemName }}</div>
+  <div class="price">{{ item.ItemPrice }}</div>
   <button type="submit" formaction="{{url_for('updateBasket')}}?item={{item.ItemId}}">Remove</button>
 </div>
 {% endfor %}
+</form>
+</div>
+<form method ="POST" class="checkout" id="checkout">
+<button type="submit" formaction="{{url_for('checkout')}}">Checkout</button>
+<div class="totalprice">Total Price: {{totalprice}}</div>
 </form>
 {% endblock %}
 {% block script %}

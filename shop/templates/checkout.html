@@ -1,53 +1,61 @@
 {% extends "index.html" %}
+{%block link%}
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='forms.css') }}">
+  {%endblock%}
 {% block content %}
   <form method="POST" action="{{url_for('checkout')}}">
-    {{ form.csrf_token }}
-    {{ form.Firstname.label }}
-    {{ form.Firstname }}
-    <br/>
-    <br/>
-    {{ form.Lastname.label }}
-    {{ form.Lastname }}
-    <br/>
-    <br/>
-    {{ form.Phonenumber.label }}
-    {{ form.Phonenumber(type="number") }}
-    <br/>
-    <br/>
-    {{ form.Postcode.label }}
-    {{ form.Postcode }}
-    <br/>
-    <br/>
-    {{ form.AddressLine1.label }}
-    {{ form.AddressLine1 }}
-    <br/>
-    <br/>
-    {{ form.TC.label }}
-    {{ form.TC }}
-    <br/>
-    <br/>
-    {{ form.County.label }}
-    {{ form.County }}
-    <br/>
-    <br/>
-    {{ form.Nameoncard.label }}
-    {{ form.Nameoncard }}
-    <br/>
-    <br/>
-    {{ form.CardNumber.label }}
-    {{ form.CardNumber(type="number") }}
-    <br/>
-    <br/>
-    {{ form.Expirydate.label }}
-    {{ form.Expirydate(type="number", size=1) }}
-    {{ form.Expirydate(type="number", size=1) }}
-    <br/>
-    <br/>
-    {{ form.CVV.label }}
-    {{ form.CVV(type="number") }}
-    <br/>
-    <br/>
-
+    <div class="Name">
+      <div class="FirstName">
+      {{ form.csrf_token }}
+      {{ form.Firstname.label }}
+      {{ form.Firstname }}
+      </div>
+      <div class="LastName">
+      {{ form.Lastname.label }}
+      {{ form.Lastname }}
+      </div>
+      <div class="PhoneNumber">
+      {{ form.Phonenumber.label }}
+      {{ form.Phonenumber(type="number") }}
+      </div>
+    </div>
+    <div class="Address">
+      <div class="Postcode">
+      {{ form.Postcode.label }}
+      {{ form.Postcode }}
+      </div>
+      <div class="AdressLine1">
+      {{ form.AddressLine1.label }}
+      {{ form.AddressLine1 }}
+      </div>
+      <div class="TC">
+      {{ form.TC.label }}
+      {{ form.TC }}
+      </div>
+      <div class="County">
+      {{ form.County.label }}
+      {{ form.County }}
+      </div>
+    </div>
+    <div class="Card">
+      <div class="Nameoncard">
+      {{ form.Nameoncard.label }}
+      {{ form.Nameoncard }}
+      </div>
+      <div class="Cardnumber">
+      {{ form.CardNumber.label }}
+      {{ form.CardNumber(type="number") }}
+      </div>
+      <div class="Expirydate">
+      {{ form.Expirydate.label }}
+      {{ form.Expirydate(type="number", size=1) }}
+      {{ form.Expirydate(type="number", size=1) }}
+      </div>
+      <div class="CVV">
+      {{ form.CVV.label }}
+      {{ form.CVV(type="number") }}
+      </div>
+    </div>
     <input type="submit" value="Checkout">
   </form>
 

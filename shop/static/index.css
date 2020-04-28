@@ -17,11 +17,16 @@ body{
 .banner{
 	grid-area:banner;
 	display: grid;
-	grid-template-columns: 1fr 2fr 2fr 2fr 2fr;
-	background-color:#b9baa2;
+	grid-template-columns: 1fr repeat(4,2fr);
 	grid-gap: 20px;
 	padding: 20px;
 
+}
+.first, .second, .third, .fourth{
+		background-color: #f9e087;
+}
+.logo{
+	background-color: #f9e087;
 }
 .banner > div > img{
 	display:grid;
@@ -34,6 +39,9 @@ text-decoration:none;
 background-color:#FFFFFF;
 color: hsl(180, 100%, 0%);
 height:75px;
+border-style: solid;
+border-width: 20px;
+border-color: #ffd438;
 }
 
 .banner > div > a > div{
@@ -42,7 +50,9 @@ height:75px;
   font-family: "Coiny", cursive;
 	color:#000000;
 }
-
+.banner > div > a:hover{
+	background-color:#d4d4d4
+}
 #search{
 	width: 100%;
 	height: 50px;

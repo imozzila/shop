@@ -25,7 +25,7 @@
   background-color:#e4eb91;
 }
 
-div > img{
+.content > div > img{
   grid-area: image;
   height:75px;
   border-style:solid;

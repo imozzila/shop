@@ -5,9 +5,9 @@
 
 
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}">
-  <link href="https://fonts.googleapis.com/css?family=Baloo+Thambi|Coiny|Fredoka+One" rel="stylesheet">
-
-
+  <link href="https://fonts.googleapis.com/css?family=Baloo+Thambi|Coiny|Fredoka+One|Sniglet" rel="stylesheet">
+  {%block link %}
+  {% endblock %}
 </head>
 
 <body>
@@ -17,29 +17,19 @@
 
 
     <div class="leftside">
-      <div class="countries">
-          Countries
-          <div class="dropdown_information">
-            <a href="#">United States</a>
-            <a href="#">Italy</a>
-            <a href="#">United Kingdom</a>
-            <a href="#">Netherlands</a>
-            <a href="#">Switzerland</a>
-            <a href="#">France</a>
-          </div>
 
-      </div>
       <div class="types">
-          Types of Cheese
-          <div class="dropdown_information">
-            <a href="#">Hard Cheese</a>
-            <a href="#">Semi Hard Cheese</a>
-            <a href="#">Goat Cheese</a>
-            <a href="#">Blue Cheese</a>
-            <a href="#">Soft Cheese</a>
-            <a href="#">Fresh Cheese</a>
+          <div class="title">
+            Types of Cheese
           </div>
-
+          <div class="list">
+            <div><a href="#">Hard Cheese</a></div>
+            <div><a href="#">Semi Hard Cheese</a></div>
+            <div><a href="#">Goat Cheese</a></div>
+          <div><a href="#">Blue Cheese</a></div>
+            <div><a href="#">Soft Cheese</a></div>
+            <div><a href="#">Fresh Cheese</a></div>
+          </div>
       </div>
     </div>
 
@@ -66,7 +56,19 @@
     </div>
 
     <div class="rightside">
-
+      <div class="countries">
+          <div class="title">
+            Countries
+          </div>
+          <div class="list">
+            <div><a href="#">United States</a></div>
+            <div><a href="#">Italy</a></div>
+            <div><a href="#">United Kingdom</a></div>
+            <div><a href="#">Netherlands</a></div>
+            <div><a href="#">Switzerland</a></div>
+            <div><a href="#">France</a></div>
+          </div>
+      </div>
     </div>
   </div>
 </body>

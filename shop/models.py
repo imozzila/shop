@@ -9,6 +9,9 @@ class Item(db.Model):
     ItemPrice = db.Column(db.Integer, nullable=False)
     ItemDesc = db.Column(db.String(255))
     ItemSales = db.Column(db.Integer, nullable=False)
+    ItemCountry = db.Column(db.String(45), nullable=False)
+    ItemType = db.Column(db.String(45), nullable=False)
+    ItemLink = db.Column(db.String(45), nullable=False)
 
 class User(UserMixin, db.Model):
     UserId = db.Column(db.Integer, primary_key=True, nullable=False)

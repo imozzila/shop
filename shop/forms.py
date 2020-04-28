@@ -1,3 +1,4 @@
+from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, IntegerField
 from wtforms.validators import InputRequired, Length, Email, EqualTo
 
@@ -17,7 +18,7 @@ class RegisterForm(FlaskForm):
 class Checkout(FlaskForm):
     Firstname = StringField('Firstname', validators=[InputRequired()])
     Lastname = StringField('Lastname', validators=[InputRequired()])
-    Phonenumber = StringField('Phonenumber', validators=[InputRequired])
+    Phonenumber = StringField('Phonenumber', validators=[InputRequired()])
     Postcode = StringField('Postcode', validators=[InputRequired()])
     AddressLine1 = StringField('AddressLine1', validators=[InputRequired()])
     TC = StringField('Town/City', validators=[InputRequired()])
@@ -27,4 +28,3 @@ class Checkout(FlaskForm):
     CardNumber = StringField('CardNumber', validators=[InputRequired()])
     Expirydate = StringField('Expirydate', validators=[InputRequired()])
     CVV = IntegerField('CVV', validators=[InputRequired()])
-

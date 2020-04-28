@@ -28,10 +28,12 @@ def shopping_basket():
     user = load_user(current_user.UserId)
     pages = organise_pages()
     basket = Basket.query.filter_by(UserId=user.UserId)
+    totalprice = 0
     for entry in basket:
         item = Item.query.filter_by(ItemId=entry.ItemId).first()
+        totalprice += item.ItemPrice
         contents.append(item)
-    return render_template('basket.html', pages=pages, page_list=list(pages.keys()), contents=contents)
+    return render_template('basket.html', pages=pages, page_list=list(pages.keys()), contents=contents, totalprice=totalprice)
 
 @app.route('/checkout', methods=['GET', 'POST'])
 def checkout():

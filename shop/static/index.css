@@ -6,7 +6,6 @@ body{
 .container{
 
 	display:grid;
-
 	grid-template-areas:
 	"banner banner banner"
 	"leftside content rightside";
@@ -18,7 +17,7 @@ body{
 .banner{
 	grid-area:banner;
 	display: grid;
-	grid-template-columns: repeat(5, 1fr);
+	grid-template-columns: 1fr 2fr 2fr 2fr 2fr;
 	background-color:#b9baa2;
 	grid-gap: 20px;
 	padding: 20px;
@@ -26,20 +25,20 @@ body{
 }
 .banner > div > img{
 	display:grid;
-	height:50px;
+	height:125px;
+	width:80%;
 }
 .banner > div > a{
 display:grid;
 text-decoration:none;
 background-color:#FFFFFF;
-
 color: hsl(180, 100%, 0%);
 height:75px;
 }
 
 .banner > div > a > div{
   grid-area:title;
-  font-size:40px;
+  font-size:30px;
   font-family: "Coiny", cursive;
 	color:#000000;
 }

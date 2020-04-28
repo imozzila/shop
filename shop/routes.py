@@ -30,6 +30,19 @@ def shopping_basket():
         contents.append(item)
     return render_template('basket.html', pages=pages, page_list=list(pages.keys()), contents=contents)
 
+@app.route('/wishlist/<int:itemid>')
+def wishlist(itemid):
+    pages=organise_pages()
+    itemi = itemid+1
+    user = load_user(current_user.UserId)
+    addtowishlist=WishList(UserId=user.UserId, ItemId=itemi)
+    db.session.add(addtowishlist)
+    #WishList.query.filter_by(UserId=user.UserId).filter_by(ItemId=itemi).delete()
+    db.session.commit()
+    wish = WishList.query.all()
+    item = Item.query.all()
+    return render_template('wishlist.html', pages=pages, wishlist=wish, item=item, page_list=list(pages.keys()))
+
 @app.route('/checkout/<int:BasketId>')
 @login_required
 def checkout(BasketId):
@@ -73,9 +86,11 @@ def search():
 @app.route('/updateBasket', methods=["POST"])
 def updateBasket():
     user = load_user(current_user.UserId)
-    query = request.form.get()
-    
-    return jsonify(results=query)
+    itemId = request.args.get('item')
+    Basket.query.filter_by(UserId=user.UserId).filter_by(ItemId=itemId).delete()
+    db.session.commit()
+    return redirect('/basket')
+
 @app.route('/settings')
 @login_required
 def settings():

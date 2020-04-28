@@ -1,0 +1,6 @@
+{% extends "index.html" %}}
+{% block content %}
+{% for wish in wishlist %}
+<h1>{{item[wish.ItemId-1].ItemName}}</h1>
+{% endfor %}
+{% endblock %}

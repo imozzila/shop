@@ -1,14 +1,18 @@
 {% extends "index.html" %}
-
+{%block link%}
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='forms.css') }}">
+{%endblock%}
 {% block content %}
   <form method="POST" action="{{url_for('login')}}">
+    <div>
     {{ form.csrf_token }}
     {{ form.username.label }}
     {{ form.username }}
-    <br/>
-    <br/>
+    </div>
+    <div>
     {{ form.password.label }}
     {{ form.password }}
     <input type="submit" value="Login">
+    </div>
   </form>
 {% endblock %}

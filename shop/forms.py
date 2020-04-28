@@ -16,15 +16,15 @@ class RegisterForm(FlaskForm):
     confirm_email = StringField('Confirm Email:', validators=[InputRequired(), EqualTo('email', 'Emails must match.')])
 
 class Checkout(FlaskForm):
-    Firstname = StringField('Firstname', validators=[InputRequired()])
-    Lastname = StringField('Lastname', validators=[InputRequired()])
-    Phonenumber = StringField('Phonenumber', validators=[InputRequired()])
+    Firstname = StringField('First Name', validators=[InputRequired()])
+    Lastname = StringField('Last Name', validators=[InputRequired()])
+    Phonenumber = StringField('Phone Number', validators=[InputRequired()])
+    AddressLine1 = StringField('Address Line 1', validators=[InputRequired()])
     Postcode = StringField('Postcode', validators=[InputRequired()])
-    AddressLine1 = StringField('AddressLine1', validators=[InputRequired()])
     TC = StringField('Town/City', validators=[InputRequired()])
     County = StringField('County', validators=[InputRequired()])
 
-    Nameoncard = StringField('Nameoncard', validators=[InputRequired()])
-    CardNumber = StringField('CardNumber', validators=[InputRequired()])
-    Expirydate = StringField('Expirydate', validators=[InputRequired()])
+    Nameoncard = StringField('Name On card', validators=[InputRequired()])
+    CardNumber = StringField('Card Number', validators=[InputRequired()])
+    Expirydate = StringField('Expiry Date', validators=[InputRequired()])
     CVV = IntegerField('CVV', validators=[InputRequired()])

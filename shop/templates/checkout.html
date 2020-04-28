@@ -1,5 +1,62 @@
 {% extends "index.html" %}
+{%block link%}
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='forms.css') }}">
+  {%endblock%}
 {% block content %}
+  <form method="POST" action="{{url_for('checkout')}}">
+    <div class="Name">
+      <div class="FirstName">
+      {{ form.csrf_token }}
+      {{ form.Firstname.label }}
+      {{ form.Firstname }}
+      </div>
+      <div class="LastName">
+      {{ form.Lastname.label }}
+      {{ form.Lastname }}
+      </div>
+      <div class="PhoneNumber">
+      {{ form.Phonenumber.label }}
+      {{ form.Phonenumber(type="number") }}
+      </div>
+    </div>
+    <div class="Address">
+      <div class="Postcode">
+      {{ form.Postcode.label }}
+      {{ form.Postcode }}
+      </div>
+      <div class="AdressLine1">
+      {{ form.AddressLine1.label }}
+      {{ form.AddressLine1 }}
+      </div>
+      <div class="TC">
+      {{ form.TC.label }}
+      {{ form.TC }}
+      </div>
+      <div class="County">
+      {{ form.County.label }}
+      {{ form.County }}
+      </div>
+    </div>
+    <div class="Card">
+      <div class="Nameoncard">
+      {{ form.Nameoncard.label }}
+      {{ form.Nameoncard }}
+      </div>
+      <div class="Cardnumber">
+      {{ form.CardNumber.label }}
+      {{ form.CardNumber(type="number") }}
+      </div>
+      <div class="Expirydate">
+      {{ form.Expirydate.label }}
+      {{ form.Expirydate(type="number", size=1) }}
+      {{ form.Expirydate(type="number", size=1) }}
+      </div>
+      <div class="CVV">
+      {{ form.CVV.label }}
+      {{ form.CVV(type="number") }}
+      </div>
+    </div>
+    <input type="submit" value="Checkout">
+  </form>
 
-
-{% endblock content %}
+{% endblock %}

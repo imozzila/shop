@@ -1,7 +1,10 @@
-from flask import render_template, url_for, redirect, jsonify, request
+from flask import render_template, url_for, redirect, jsonify, request, flash
 from shop import app, db, forms, login_manager
 from shop.models import Item, User, Basket, WishList
 from flask_login import login_required, login_user, current_user, logout_user
+from flask_admin.contrib.sqla import ModelView
+
+
 
 def organise_pages():
     if not current_user.is_anonymous:
@@ -36,7 +39,7 @@ def wishlist(itemid, mode):
     itemi = itemid+1
     user = load_user(current_user.UserId)
     if mode == 1:
-        if itemid < 7:
+        if itemid < db.session.query(Item).count():
             addtowishlist=WishList(UserId=user.UserId, ItemId=itemi)
             db.session.add(addtowishlist)
     if mode == 2:

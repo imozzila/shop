@@ -1,24 +1,59 @@
 {% extends "index.html" %}
-
+{%block link%}
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='forms.css') }}">
+{%endblock%}
 
 {% block content %}
   <form method="POST" action="{{url_for('signup')}}">
+    <div>
     {{ form.csrf_token }}
     {{ form.username.label }}
     {{ form.username }}
-    <br/>
-    <br/>
+    <div>
+    {% for error in form.username.errors %}
+       <div style="color:red;">{{error}}</div>
+    {% endfor %}
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div style="color:red;">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    </div>
+    </div>
+    <div>
     {{ form.email.label }}
     {{ form.email }}
-    <ul>
+    <div>
     {% for error in form.email.errors %}
-      <li style="color:red;">{{error}}</li>
+       <div style="color:red;">{{error}}</div>
     {% endfor %}
-    </ul>
-    <br/>
-    <br/>
+    </div>
+    {{ form.confirm_email.label }}
+    {{ form.confirm_email }}
+    <div>
+    {% for error in form.confirm_email.errors %}
+       <div style="color:red;">{{error}}</div>
+    {% endfor %}
+    </div>
+    </div>
+    <div>
     {{ form.password.label }}
     {{ form.password }}
+    <div>
+    {% for error in form.password.errors %}
+       <div style="color:red;">{{error}}</div>
+    {% endfor %}
+    </div>
+    {{ form.confirm_password.label }}
+    {{ form.confirm_password }}
+    <div>
+    {% for error in form.confirm_password.errors %}
+       <div style="color:red;">{{error}}</div>
+    {% endfor %}
+    </div>
+    </div>
     <input type="submit" value="Sign Up">
   </form>
 {% endblock %}

@@ -2,5 +2,5 @@
 {% block content %}
 <h1>{{item[itemid].ItemName}}</h1>
 <h2>{{item[itemid].ItemDesc}}</h2>
-<a href='{{url_for('wishlist', itemid = itemid)}}'><input type="button" value="Add to wishlist"></a>
+<a href='{{url_for('wishlist', itemid = itemid, mode = 1)}}'><input type="button" value="Add to wishlist"></a>
 {% endblock %}

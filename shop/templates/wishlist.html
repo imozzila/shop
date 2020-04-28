@@ -2,5 +2,6 @@
 {% block content %}
 {% for wish in wishlist %}
 <h1>{{item[wish.ItemId-1].ItemName}}</h1>
+<a href='{{url_for('wishlist', itemid = wish.ItemId-1, mode = 2)}}'><input type="button" value="Remove from wishlist"></a>
 {% endfor %}
 {% endblock %}

@@ -30,18 +30,22 @@ def shopping_basket():
         contents.append(item)
     return render_template('basket.html', pages=pages, page_list=list(pages.keys()), contents=contents)
 
-@app.route('/wishlist/<int:itemid>')
-def wishlist(itemid):
+@app.route('/wishlist/<int:itemid>/<int:mode>')
+def wishlist(itemid, mode):
     pages=organise_pages()
     itemi = itemid+1
     user = load_user(current_user.UserId)
-    addtowishlist=WishList(UserId=user.UserId, ItemId=itemi)
-    db.session.add(addtowishlist)
-    #WishList.query.filter_by(UserId=user.UserId).filter_by(ItemId=itemi).delete()
+    if mode == 1:
+        if itemid < 7:
+            addtowishlist=WishList(UserId=user.UserId, ItemId=itemi)
+            db.session.add(addtowishlist)
+    if mode == 2:
+        WishList.query.filter_by(UserId=user.UserId).filter_by(ItemId=itemi).delete()
     db.session.commit()
     wish = WishList.query.all()
     item = Item.query.all()
     return render_template('wishlist.html', pages=pages, wishlist=wish, item=item, page_list=list(pages.keys()))
+
 
 @app.route('/checkout/<int:BasketId>')
 @login_required

@@ -1,7 +1,10 @@
 body{
-	background-color:#f9ffa3;
+	background-color:#f9e087;
+	background-position:top center;
+	background-repeat:no-repeat;
 }
 .container{
+
 	display:grid;
 
 	grid-template-areas:
@@ -9,18 +12,22 @@ body{
 	"leftside content rightside";
 	grid-template-columns: 1fr 4fr 1fr;
 	grid-gap:30px;
+	font-family:"Coiny", cursive;
 }
 
 .banner{
 	grid-area:banner;
 	display: grid;
-	grid-template-columns: repeat(4, 1fr);
+	grid-template-columns: repeat(5, 1fr);
 	background-color:#b9baa2;
 	grid-gap: 20px;
 	padding: 20px;
 
 }
-
+.banner > div > img{
+	display:grid;
+	height:50px;
+}
 .banner > div > a{
 display:grid;
 text-decoration:none;

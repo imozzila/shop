@@ -4,7 +4,7 @@
   font-family:Baloo Thambi;
   grid-area:banner;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   background-color:#b9baa2;
   grid-gap: 20px;
   padding:10px;
@@ -14,9 +14,9 @@
 .item{
   display:grid;
   grid-template-areas:
-  "image name price"
-  "button button button";
-  grid-template-columns: 1fr 1fr 1fr;
+  "image name price button";
+  grid-template-columns: repeat(4, 1fr);
+  padding:20px;
 }
 .item:nth-child(2n+1){
   background-color:#dce65a;
@@ -31,7 +31,7 @@ div > img{
   border-style:solid;
 
 }
-.item > div{
+.name, .price, .submit{
   font-family:Baloo Thambi;
   font-size:15px;
 	position:relative;
@@ -44,11 +44,14 @@ div > img{
   grid-area:price;
 }
 
-.item > button{
+.item > .submit{
   grid-area:button;
-  width:max;
   font-family:Sniglet;
   height:25px;
+}
+.submit > input{
+  height:40px;
+  width:250px;
 }
 .checkout{
   padding-top:5px;

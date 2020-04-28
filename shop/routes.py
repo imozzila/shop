@@ -1,6 +1,6 @@
 from flask import render_template, url_for, redirect, jsonify, request, flash
 from shop import app, db, forms, login_manager, checkout
-from shop.models import Item, User, Basket, WishList
+from shop.models import Item, User, Basket, WishList, OrderHistory
 from flask_login import login_required, login_user, current_user, logout_user
 from flask_bcrypt import Bcrypt, check_password_hash, generate_password_hash
 from flask_admin.contrib.sqla import ModelView
@@ -24,10 +24,11 @@ def home():
 
 @app.route('/basket/')
 def shopping_basket():
+    pages = organise_pages()
     if not current_user.is_anonymous:
         contents = []
         user = load_user(current_user.UserId)
-        pages = organise_pages()
+
         basket = Basket.query.filter_by(UserId=user.UserId)
         totalprice = 0
         for entry in basket:
@@ -35,7 +36,7 @@ def shopping_basket():
             totalprice += item.ItemPrice
             contents.append(item)
         return render_template('basket.html', pages=pages, page_list=list(pages.keys()), contents=contents, totalprice=totalprice)
-    return 'You are not logged in. You must be logged in to view basket.'
+    return redirect('error')
 
 @app.route('/checkout', methods=['GET', 'POST'])
 def checkout():
@@ -102,6 +103,12 @@ def settings():
 def logout():
     logout_user()
     return redirect('/home')
+
+@app.route('/error')
+def error():
+    pages=organise_pages()
+
+    return render_template('error.html', pages=pages, page_list=list(pages.keys()))
 
 @login_manager.user_loader
 def load_user(user_id):

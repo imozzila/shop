@@ -17,7 +17,9 @@
   <img src="{{url_for('static', filename='images/'+item.ItemLink)}}" />
   <div class="name">{{ item.ItemName }}</div>
   <div class="price">{{ item.ItemPrice }}</div>
-  <button type="submit" formaction="{{url_for('updateBasket')}}?item={{item.ItemId}}">Remove</button>
+  <div class="submit">
+    <input type="submit" value="Remove" formaction="{{url_for('updateBasket')}}?item={{item.ItemId}}"></input>
+  </div>
 </div>
 {% endfor %}
 </form>

@@ -18,13 +18,16 @@ body{
 .banner{
 	grid-area:banner;
 	display: grid;
-	grid-template-columns: repeat(4, 1fr);
+	grid-template-columns: repeat(5, 1fr);
 	background-color:#b9baa2;
 	grid-gap: 20px;
 	padding: 20px;
 
 }
-
+.banner > div > img{
+	display:grid;
+	height:50px;
+}
 .banner > div > a{
 display:grid;
 text-decoration:none;

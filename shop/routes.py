@@ -1,6 +1,6 @@
 from flask import render_template, url_for, redirect, jsonify, request, flash
 from shop import app, db, forms, login_manager, checkout
-from shop.models import Item, User, Basket, WishList
+from shop.models import Item, User, Basket, WishList, OrderHistory
 from flask_login import login_required, login_user, current_user, logout_user
 from flask_bcrypt import Bcrypt, check_password_hash, generate_password_hash
 from flask_admin.contrib.sqla import ModelView
@@ -107,7 +107,7 @@ def logout():
 @app.route('/error')
 def error():
     pages=organise_pages()
-    
+
     return render_template('error.html', pages=pages, page_list=list(pages.keys()))
 
 @login_manager.user_loader

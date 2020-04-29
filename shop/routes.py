@@ -1,5 +1,4 @@
 from flask import render_template, url_for, redirect, jsonify, request, flash
-
 from shop import app, db, forms, login_manager, admin, basic_auth
 from shop.models import Item, User, Basket, WishList, OrderHistory
 from flask_login import login_required, login_user, current_user, logout_user
@@ -32,21 +31,21 @@ def home():
     item = Item.query.all()
     return render_template('home.html', pages=pages, item=item, countries=countries, types=types, info=info, page_list=list(pages.keys()))
 
+
 @app.route('/basket/')
+@login_required
 def shopping_basket():
     pages, countries, types=organise_pages()
     contents = []
-    if not current_user.is_anonymous:
-        user = load_user(current_user.UserId)
+    user = load_user(current_user.UserId)
 
-        basket = Basket.query.filter_by(UserId=user.UserId)
-        totalprice = 0
-        for entry in basket:
-            item = Item.query.filter_by(ItemId=entry.ItemId).first()
-            totalprice += item.ItemPrice
-            contents.append(item)
-        return render_template('basket.html', pages=pages, page_list=list(pages.keys()), countries=countries, types=types, contents=contents, totalprice=totalprice)
-    return redirect('error')
+    basket = Basket.query.filter_by(UserId=user.UserId)
+    totalprice = 0
+    for entry in basket:
+        item = Item.query.filter_by(ItemId=entry.ItemId).first()
+        totalprice += item.ItemPrice
+        contents.append(item)
+    return render_template('basket.html', pages=pages, page_list=list(pages.keys()), countries=countries, types=types, contents=contents, totalprice=totalprice)
 
 
 @app.route('/wishlist/<int:itemid>/<int:mode>')
@@ -111,8 +110,13 @@ def signup():
         	new_user = User(UserName=form.username.data, UserEmail=form.email.data, UserPassword=password_hash)
         	db.session.add(new_user)
         	db.session.commit()
-        	return '<h1>New user has been created!</h1>'
+        	return redirect('success')
     return render_template('signup.html', form=form, pages=pages, countries=countries, types=types, page_list=list(pages.keys()))
+
+@app.route('/success')
+def success():
+    pages,countries,types = organise_pages()
+    return render_template('success.html', pages=pages, countries=countries, types=types, page_list=list(pages.keys()))
 
 @app.route('/login', methods=['GET','POST'])
 def login():
@@ -169,6 +173,7 @@ def adminpage():
 def settings():
     pages, countries, types = organise_pages()
     return render_template('settings.html', pages=pages, countries=countries, types=types, page_list=list(pages.keys()))
+
 @app.route('/info/<string:itemid>', methods=['GET'])
 def info(itemid):
     pages, countries, types = organise_pages()
@@ -182,7 +187,7 @@ def logout():
     logout_user()
     return redirect('/home')
 
-@app.route('/error')
+@login_manager.unauthorized_handler
 def error():
     pages, countries, types=organise_pages()
     return render_template('error.html', pages=pages, countries=countries, types=types, page_list=list(pages.keys()))
@@ -190,6 +195,8 @@ def error():
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+
 
 admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(Item, db.session))

@@ -10,23 +10,24 @@ bcrypt = Bcrypt(app)
 
 def organise_pages():
     if not current_user.is_anonymous:
+        countries = []
+        types = []
+        for country in db.session.query(Item.ItemCountry).distinct():
+            countries.append(country)
+        for type in db.session.query(Item.ItemType).distinct():
+            types.append(type)
         user = load_user(current_user.UserId)
         print(user)
         pages = {'Home':'home', 'Basket':'shopping_basket', 'Admin':'settings', 'Log-out':'logout'}
     else:
         pages= {'Home':'home', 'Basket':'shopping_basket', 'Log-In':'login', 'Sign-Up':'signup'}
-    return pages
+    return pages, countries, types
 
 @app.route('/')
 @app.route('/home')
 def home():
-    countries = []
-    types = []
-    for country in db.session.query(Item.ItemCountry).distinct():
-        countries.append(country)
-    for type in db.session.query(Item.ItemType).distinct():
-        types.append(type)
-    pages = organise_pages()
+
+    pages, countries, types = organise_pages()
     item = Item.query.all()
     return render_template('home.html', pages=pages, item=item, countries=countries, types=types, info=info, page_list=list(pages.keys()))
 
@@ -56,14 +57,10 @@ def shopping_basket():
 @app.route('/wishlist/<int:itemid>/<int:mode>')
 def wishlist(itemid, mode):
     wishlistids = []
-    countries = []
-    types = []
+
     already = ""
-    for country in db.session.query(Item.ItemCountry).distinct():
-        countries.append(country)
-    for type in db.session.query(Item.ItemType).distinct():
-        types.append(type)
-    pages=organise_pages()
+
+    pages, countries, types=organise_pages()
     itemi = itemid+1
     user = load_user(current_user.UserId)
     items = WishList.query.all()
@@ -100,6 +97,13 @@ def checkout():
 
 @app.route('/delete', methods=['GET','POST'])
 def delete():
+    countries = []
+    types = []
+    for country in db.session.query(Item.ItemCountry).distinct():
+        countries.append(country)
+    for type in db.session.query(Item.ItemType).distinct():
+        types.append(type)
+    pages=organise_pages()
     form = forms.DeleteForm()
     if form.validate_on_submit():
         user = User.query.filter_by(UserName=form.username.data).first()
@@ -109,7 +113,7 @@ def delete():
                 db.session.commit()
                 return '<h1>Your account has been deleted.</h1>'
         return '<h1>Invalid username or password.</h1>'
-    return render_template('delete.html', form=form)
+    return render_template('delete.html', form=form, countries=countries, types=types, pages=pages, page_list=list(pages.keys()))
 
 
 @app.route('/signup', methods=['GET','POST'])

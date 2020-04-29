@@ -29,13 +29,3 @@
 <div class="totalprice">Total Price: {{totalprice}}</div>
 </form>
 {% endblock %}
-{% block script %}
-<script type="text/javascript">
-  function removeSelf(itemId){
-    var request = new XMLHttpRequest();
-    request.addEventListener('load', addShow);
-    request.open('POST', {{ url_for('updateBasket')|tojson }});
-    request.send(new FormData(itemId));
-  }
-</script>
-{% endblock %}

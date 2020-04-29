@@ -9,16 +9,17 @@ from flask_admin.contrib.sqla import ModelView
 bcrypt = Bcrypt(app)
 
 def organise_pages():
+    countries = []
+    types = []
+    for country in db.session.query(Item.ItemCountry).distinct():
+        countries.append(country)
+    for type in db.session.query(Item.ItemType).distinct():
+        types.append(type)
     if not current_user.is_anonymous:
-        countries = []
-        types = []
-        for country in db.session.query(Item.ItemCountry).distinct():
-            countries.append(country)
-        for type in db.session.query(Item.ItemType).distinct():
-            types.append(type)
+
         user = load_user(current_user.UserId)
         print(user)
-        pages = {'Home':'home', 'Basket':'shopping_basket', 'Admin':'settings', 'Log-out':'logout'}
+        pages = {'Home':'home', 'Basket':'shopping_basket', 'Settings':'settings', 'Log-out':'logout'}
     else:
         pages= {'Home':'home', 'Basket':'shopping_basket', 'Log-In':'login', 'Sign-Up':'signup'}
     return pages, countries, types
@@ -33,14 +34,8 @@ def home():
 
 @app.route('/basket/')
 def shopping_basket():
-    countries = []
-    types = []
-    pages=organise_pages()
-    for country in db.session.query(Item.ItemCountry).distinct():
-        countries.append(country)
-    for type in db.session.query(Item.ItemType).distinct():
-        types.append(type)
-        contents = []
+    pages, countries, types=organise_pages()
+    contents = []
     if not current_user.is_anonymous:
         user = load_user(current_user.UserId)
 
@@ -50,7 +45,7 @@ def shopping_basket():
             item = Item.query.filter_by(ItemId=entry.ItemId).first()
             totalprice += item.ItemPrice
             contents.append(item)
-        return render_template('basket.html', pages=pages, page_list=list(pages.keys()), contents=contents, totalprice=totalprice)
+        return render_template('basket.html', pages=pages, page_list=list(pages.keys()), countries=countries, types=types, contents=contents, totalprice=totalprice)
     return redirect('error')
 
 
@@ -59,11 +54,10 @@ def wishlist(itemid, mode):
     wishlistids = []
 
     already = ""
-
     pages, countries, types=organise_pages()
     itemi = itemid+1
     user = load_user(current_user.UserId)
-    items = WishList.query.all()
+    items = WishList.query.filter_by(UserId=user.UserId)
     for item in items:
         wishlistids.append(item.ItemId)
     if mode == 1:
@@ -76,20 +70,14 @@ def wishlist(itemid, mode):
     if mode == 2:
         WishList.query.filter_by(UserId=user.UserId).filter_by(ItemId=itemi).delete()
     db.session.commit()
-    wish = WishList.query.all()
+    wish=WishList.query.filter_by(UserId=user.UserId)
     item = Item.query.all()
     return render_template('wishlist.html', pages=pages, wishlist=wish, already=already, item=item, countries=countries, types=types, page_list=list(pages.keys()))
 
 
 @app.route('/checkout', methods=['GET', 'POST'])
 def checkout():
-    countries = []
-    types = []
-    for country in db.session.query(Item.ItemCountry).distinct():
-        countries.append(country)
-    for type in db.session.query(Item.ItemType).distinct():
-        types.append(type)
-    pages = organise_pages()
+    pages, countries, pages = organise_pages()
     form = forms.Checkout()
     if form.validate_on_submit():
         return '<h1>Your order has been placed!</h1>'
@@ -97,13 +85,7 @@ def checkout():
 
 @app.route('/delete', methods=['GET','POST'])
 def delete():
-    countries = []
-    types = []
-    for country in db.session.query(Item.ItemCountry).distinct():
-        countries.append(country)
-    for type in db.session.query(Item.ItemType).distinct():
-        types.append(type)
-    pages=organise_pages()
+    pages, countries, types=organise_pages()
     form = forms.DeleteForm()
     if form.validate_on_submit():
         user = User.query.filter_by(UserName=form.username.data).first()
@@ -118,13 +100,7 @@ def delete():
 
 @app.route('/signup', methods=['GET','POST'])
 def signup():
-    countries = []
-    types = []
-    for country in db.session.query(Item.ItemCountry).distinct():
-        countries.append(country)
-    for type in db.session.query(Item.ItemType).distinct():
-        types.append(type)
-    pages = organise_pages()
+    pages, countries, types = organise_pages()
     form = forms.RegisterForm()
     if form.validate_on_submit():
         user = User.query.filter_by(UserName=form.username.data).first()
@@ -140,13 +116,7 @@ def signup():
 
 @app.route('/login', methods=['GET','POST'])
 def login():
-    countries = []
-    types = []
-    for country in db.session.query(Item.ItemCountry).distinct():
-        countries.append(country)
-    for type in db.session.query(Item.ItemType).distinct():
-        types.append(type)
-    pages = organise_pages()
+    pages, countries, types = organise_pages()
     form = forms.LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(UserName=form.username.data).first()
@@ -157,14 +127,7 @@ def login():
         return '<h1>Invalid username or password.</h1>'
     return render_template('login.html', form=form, pages=pages, countries=countries, types=types, page_list=list(pages.keys()))
 
-@app.route('/search', methods=["POST"])
-def search():
-    itemResults = []
-    query = request.form.get("search", 0, type=str)
-    queryResults = Item.query.filter(Item.ItemName.like(query+'%'))
-    for item in queryResults:
-        itemResults.append(item.ItemName)
-    return jsonify(result=itemResults)
+
 
 @app.route('/updateBasket', methods=["POST"])
 def updateBasket():
@@ -177,14 +140,8 @@ def updateBasket():
 
 @app.route('/itemlist/<string:search>/<int:mode>')
 def itemlist(search, mode):
-    pages = organise_pages()
+    pages, countries, types = organise_pages()
     contents = []
-    countries = []
-    types = []
-    for country in db.session.query(Item.ItemCountry).distinct():
-        countries.append(country)
-    for type in db.session.query(Item.ItemType).distinct():
-        types.append(type)
     items = Item.query.all()
     if mode == 1:
         for item in items:
@@ -200,22 +157,21 @@ def itemlist(search, mode):
 
     return render_template('itemlist.html', pages=pages, types=types, contents=contents, countries=countries, page_list=list(pages.keys()))
 
-@app.route('/settings')
+@app.route('/admin')
 @login_required
 @basic_auth.required
-def settings():
+def adminpage():
     pages = organise_pages()
     return redirect(url_for('user.index_view'))
 
+@app.route('/settings')
+@login_required
+def settings():
+    pages, countries, types = organise_pages()
+    return render_template('settings.html', pages=pages, countries=countries, types=types, page_list=list(pages.keys()))
 @app.route('/info/<string:itemid>', methods=['GET'])
 def info(itemid):
-    countries = []
-    types = []
-    for country in db.session.query(Item.ItemCountry).distinct():
-        countries.append(country)
-    for type in db.session.query(Item.ItemType).distinct():
-        types.append(type)
-    pages = organise_pages()
+    pages, countries, types = organise_pages()
     item = Item.query.all()
     return render_template('info.html', pages=pages, countries=countries, types=types, itemid=int(itemid)-1, item=item, page_list=list(pages.keys()))
 
@@ -228,9 +184,8 @@ def logout():
 
 @app.route('/error')
 def error():
-    pages=organise_pages()
-
-    return render_template('error.html', pages=pages, page_list=list(pages.keys()))
+    pages, countries, types=organise_pages()
+    return render_template('error.html', pages=pages, countries=countries, types=types, page_list=list(pages.keys()))
 
 @login_manager.user_loader
 def load_user(user_id):

@@ -11,9 +11,9 @@ def organise_pages():
     if not current_user.is_anonymous:
         user = load_user(current_user.UserId)
         print(user)
-        pages = {'The Little Cheese':'home', 'Basket':'shopping_basket', user.UserName:'settings', 'Log-out':'logout'}
+        pages = {'Home':'home', 'Basket':'shopping_basket', user.UserName:'settings', 'Log-out':'logout'}
     else:
-        pages= {'The Little Cheese':'home', 'Basket':'shopping_basket', 'Log-In':'login', 'Sign-Up':'signup'}
+        pages= {'Home':'home', 'Basket':'shopping_basket', 'Log-In':'login', 'Sign-Up':'signup'}
     return pages
 
 @app.route('/')

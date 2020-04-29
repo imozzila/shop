@@ -1,0 +1,13 @@
+{% extends "index.html" %}}
+{% block content %}
+<h1>Wishlist:</h1>
+{% for wish in wishlist %}
+<a href = '{{url_for('info', itemid = wish.ItemId)}}'>>{{item[wish.ItemId-1].ItemName}}</a>
+<h1></h1>
+<a href='{{url_for('wishlist', itemid = wish.ItemId-1, mode = 2)}}'><input type="button" value="Remove from wishlist"></a>
+<h1></h1>
+{% endfor %}
+<h2>{{already}}</h2>
+{% endblock %}
+
+<h1>{{item[wish.ItemId-1].ItemName}}</h1>

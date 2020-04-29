@@ -1,0 +1,6 @@
+{% extends "index.html" %}
+{% block content%}
+<div> WishList: <a href="{{url_for('wishlist', itemid =5928329 , mode = 1)}}">Click here</a></div>
+<div> Admin Page: <a href="{{url_for('adminpage')}}">Click here</a></div>
+<div>Want to delete your account? <a href="{{url_for('delete')}}">Click here</a> </div>
+{%endblock%}

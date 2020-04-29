@@ -1,9 +1,12 @@
 from flask import render_template, url_for, redirect, jsonify, request, flash
 from shop import app, db, forms, login_manager, admin, basic_auth
-from shop.models import Item, User, Basket, WishList, OrderHistory
+from shop.models import Item, User, Basket, WishList, Orderhistory
 from flask_login import login_required, login_user, current_user, logout_user
 from flask_admin.contrib.sqla import ModelView
+from flask_bcrypt import Bcrypt, check_password_hash, generate_password_hash
+from datetime import date
 
+bcrypt = Bcrypt(app)
 
 def organise_pages():
     countries = []
@@ -13,10 +16,9 @@ def organise_pages():
     for type in db.session.query(Item.ItemType).distinct():
         types.append(type)
     if not current_user.is_anonymous:
-
         user = load_user(current_user.UserId)
 
-        pages = {'Home':'home', 'Basket':'shopping_basket', 'Settings':'settings', 'Log-out':'logout'}
+        pages = {'Home':'home', 'Basket':'shopping_basket', 'Account':'settings', 'Log-out':'logout'}
     else:
         pages= {'Home':'home', 'Basket':'shopping_basket', 'Log-In':'login', 'Sign-Up':'signup'}
     return pages, countries, types
@@ -24,7 +26,6 @@ def organise_pages():
 @app.route('/')
 @app.route('/home')
 def home():
-
     pages, countries, types = organise_pages()
     item = Item.query.all()
     return render_template('home.html', pages=pages, item=item, countries=countries, types=types, info=info, page_list=list(pages.keys()))
@@ -47,9 +48,10 @@ def shopping_basket():
 
 
 @app.route('/wishlist/<int:itemid>/<int:mode>')
+@login_required
 def wishlist(itemid, mode):
     wishlistids = []
-
+    basketids=[]
     already = ""
     pages, countries, types=organise_pages()
     itemi = itemid+1
@@ -57,7 +59,7 @@ def wishlist(itemid, mode):
     items = WishList.query.filter_by(UserId=user.UserId)
     for item in items:
         wishlistids.append(item.ItemId)
-    basketentries = Basket.query.all()
+    basketentries = Basket.query.filter_by(UserId=user.UserId)
     for entry in basketentries:
         basketids.append(entry.ItemId)
     if mode == 1:
@@ -78,10 +80,13 @@ def wishlist(itemid, mode):
             #WishList.query.delete()      ###clears wishlist
     if mode == 4:
         if itemid < db.session.query(Item).count():
-            addtobasket=Basket(UserId=user.UserId, ItemId=itemid)
-            db.session.add(addtobasket)
-            db.session.commit()
-            return(shopping_basket())
+            if itemid not in basketids:
+                addtobasket=Basket(UserId=user.UserId, ItemId=itemid)
+                db.session.add(addtobasket)
+                db.session.commit()
+                return redirect(url_for('shopping_basket'))
+            else:
+                already="This item is already in the basket!"
     db.session.commit()
     wish=WishList.query.filter_by(UserId=user.UserId)
     item = Item.query.all()
@@ -89,27 +94,61 @@ def wishlist(itemid, mode):
 
 
 @app.route('/checkout', methods=['GET', 'POST'])
+@login_required
 def checkout():
-    pages, countries, pages = organise_pages()
-    form = forms.Checkout()
-    if form.validate_on_submit():
-        return '<h1>Your order has been placed!</h1>'
-    return render_template('checkout.html', form=form, countries=countries, types=types, pages=pages, page_list=list(pages.keys()))
+    pages, countries, types = organise_pages()
+    user = load_user(current_user.UserId)
+    basket = Basket.query.filter_by(UserId=user.UserId)
+    print(basket.first())
+    if not basket.first():
+        return redirect(url_for('shopping_basket'))
+    else:
+        form = forms.Checkout()
+
+
+        if form.validate_on_submit():
+            order = []
+
+
+            for entry in basket:
+                db.session.delete(entry)
+                item = Item.query.filter_by(ItemId=entry.ItemId).first()
+                item.ItemSales += 1
+                db.session.add(item)
+                new_order = Orderhistory(UserId=user.UserId, ItemId=item.ItemId, OrderDate=date.today().strftime("%d/%m/%y"))
+                db.session.add(new_order)
+            db.session.commit()
+            return '<h1>Your order has been placed!</h1>'
+        return render_template('checkout.html', form=form, countries=countries, types=types, pages=pages, page_list=list(pages.keys()))
 
 
 @app.route('/delete', methods=['GET','POST'])
+@login_required
 def delete():
     pages, countries, types=organise_pages()
     form = forms.DeleteForm()
+    user = load_user(current_user.UserId)
     if form.validate_on_submit():
+        wishlist=WishList.query.filter_by(UserId=user.UserId)
+        basket=Basket.query.filter_by(UserId=user.UserId)
         user = User.query.filter_by(UserName=form.username.data).first()
         if user:
             if check_password_hash(user.UserPassword, form.password.data):
+                for item in wishlist:
+                    db.session.delete(item)
+                for item in basket:
+                    db.session.delete(item)
                 db.session.delete(user)
                 db.session.commit()
-                return '<h1>Your account has been deleted.</h1>'
-        return '<h1>Invalid username or password.</h1>'
+                return redirect('successfuldelete')
+        flash('invalid credentials')
     return render_template('delete.html', form=form, countries=countries, types=types, pages=pages, page_list=list(pages.keys()))
+
+@app.route('/successfuldelete')
+def successfuldelete():
+    pages, countries, types=organise_pages()
+    return render_template('successfuldelete.html', form=form, countries=countries, types=types, pages=pages, page_list=list(pages.keys()))
+
 
 
 @app.route('/signup', methods=['GET','POST'])
@@ -134,19 +173,24 @@ def success():
     pages,countries,types = organise_pages()
     return render_template('success.html', pages=pages, countries=countries, types=types, page_list=list(pages.keys()))
 
+@app.route('/invalid')
+def invalid():
+    pages,countries,types = organise_pages()
+    return render_template('invalid.html', pages=pages, countries=countries, types=types, page_list=list(pages.keys()))
+
 @app.route('/login', methods=['GET','POST'])
 def login():
     pages, countries, types = organise_pages()
     form = forms.LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(UserName=form.username.data).first()
-        print(user)
         if user:
-            if user.UserPassword == form.password.data:
+            if check_password_hash(user.UserPassword, form.password.data):
                 login_user(user)
                 return redirect(url_for('shopping_basket'))
-        return '<h1>Invalid username or password.</h1>'
+        return redirect(url_for('invalid'))
     return render_template('login.html', form=form, pages=pages, countries=countries, types=types, page_list=list(pages.keys()))
+
 
 
 
@@ -222,4 +266,4 @@ admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(Item, db.session))
 admin.add_view(ModelView(Basket, db.session))
 admin.add_view(ModelView(WishList, db.session))
-admin.add_view(ModelView(OrderHistory, db.session))
+admin.add_view(ModelView(Orderhistory, db.session))

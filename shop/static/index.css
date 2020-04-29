@@ -69,16 +69,12 @@ h5{
 }
 
 
-a:link, a:visited {
+.container > a:link{
   color: #24305E;
   display: inline-block;
 	font-weight: bold;
 
 }
-
-
-
-
 
 p{
 	color:#24305E;
@@ -115,7 +111,6 @@ p{
 }
 .rightside{
 	grid-area:rightside;
-	color:#A8D0E6;
 }
 
 .leftside, .rightside{

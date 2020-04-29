@@ -15,27 +15,27 @@ class Item(db.Model):
 
 class User(UserMixin, db.Model):
     UserId = db.Column(db.Integer, primary_key=True)
-    UserName = db.Column(db.String(80))
-    UserPassword = db.Column(db.String(80))
-    UserEmail = db.Column(db.String(80))
-    #UserType = db.Column(db.String(80))
+    UserName = db.Column(db.String(255), nullable=False)
+    UserPassword = db.Column(db.String(255), nullable=False)
+    UserEmail = db.Column(db.String(255), nullable=False)
+    UserType = db.Column(db.String(80), nullable=False)
 
     def get_id(self):
         return self.UserId
 
 class Basket(db.Model):
     EntryId = db.Column(db.Integer, primary_key=True, nullable=False)
-    UserId = db.Column(db.Integer, nullable=False)
-    ItemId = db.Column(db.Integer, nullable=False)
+    UserId = db.Column(db.Integer,  nullable=False)
+    ItemId = db.Column(db.Integer,  nullable=False)
 
 
 class WishList(db.Model):
     WishListId = db.Column(db.Integer, primary_key=True, nullable=False)
-    UserId = db.Column(db.Integer, nullable=False)
+    UserId = db.Column(db.Integer,  nullable=False)
     ItemId = db.Column(db.Integer, nullable=False)
 
-class OrderHistory(db.Model):
+class Orderhistory(db.Model):
     OrderId = db.Column(db.Integer, primary_key=True, nullable=False)
-    UserId = db.Column(db.Integer, db.ForeignKey("User.UserId"), nullable=False)
-    ItemId = db.Column(db.Integer, db.ForeignKey("Item.ItemId"), nullable=False)
+    UserId = db.Column(db.Integer,  nullable=False)
+    ItemId = db.Column(db.Integer,  nullable=False)
     OrderDate = db.Column(db.Date, nullable=False)

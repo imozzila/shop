@@ -14,7 +14,7 @@
 <form method = "POST" id="basket">
 {% for item in contents %}
 <div class ="item" name="{{item.ItemId}}">
-  <img src="{{url_for('static', filename='images/'+item.ItemLink)}}" />
+  <img src="{{url_for('static', filename='images/'+item.ItemLink)}}", width=100 />
   <div class="name">{{ item.ItemName }}</div>
   <div class="price">{{ item.ItemPrice }}</div>
   <div class="submit">

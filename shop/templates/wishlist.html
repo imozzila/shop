@@ -2,9 +2,11 @@
 {% block content %}
 <h1>Wishlist:</h1>
 {% for wish in wishlist %}
-<a href = '{{url_for('info', itemid = wish.ItemId)}}'>>{{item[wish.ItemId-1].ItemName}}</a>
+<a href = '{{url_for('info', itemid = wish.ItemId)}}'>>{{item[wish.ItemId-1].ItemName}}</a><h5> £{{item[wish.ItemId-1].ItemPrice}}</h5>
 <h1></h1>
 <a href='{{url_for('wishlist', itemid = wish.ItemId-1, mode = 2)}}'><input type="button" value="Remove from wishlist"></a>
+<h1></h1>
+<a href='{{url_for('wishlist', itemid = wish.ItemId-1, mode = 3)}}'><input type="button" value="Add to basket"></a>
 <h1></h1>
 {% endfor %}
 <h2>{{already}}</h2>

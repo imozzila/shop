@@ -2,6 +2,7 @@
 {% block content %}
 {% for items in contents %}
 <a href = '{{url_for('info', itemid = items.ItemId)}}'>{{ items.ItemName }}</a>
-<p>{{items.ItemDesc}}</p><h5> £{{items.ItemPrice}}</h5>
+<p>{{items.ItemDesc}}</p><img src="{{url_for('static', filename='images/'+items.ItemLink)}}", width=100 />
+<h5> £{{items.ItemPrice}}</h5>
 {% endfor %}
 {% endblock %}

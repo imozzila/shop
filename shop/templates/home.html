@@ -1,5 +1,10 @@
 {% extends "index.html" %}}
 
 {% block content %}
-<!-- Feel free to add items in here -->
+{% for items in item %}
+<a href = '{{url_for('info', itemid = items.ItemId)}}'>{{ items.ItemName }}</a>
+<p>{{items.ItemDesc}}</p><img src="{{url_for('static', filename='images/'+items.ItemLink)}}", width=100 />
+
+<h5> £{{items.ItemPrice}}</h5>
+{% endfor %}
 {% endblock content %}

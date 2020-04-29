@@ -1,5 +1,5 @@
 from flask import render_template, url_for, redirect, jsonify, request, flash
-from shop import app, db, forms, login_manager, admin
+from shop import app, db, forms, login_manager, admin, basic_auth
 from shop.models import Item, User, Basket, WishList, OrderHistory
 from flask_login import login_required, login_user, current_user, logout_user
 from flask_bcrypt import Bcrypt, check_password_hash, generate_password_hash
@@ -11,7 +11,7 @@ def organise_pages():
     if not current_user.is_anonymous:
         user = load_user(current_user.UserId)
         print(user)
-        pages = {'Home':'home', 'Basket':'shopping_basket', user.UserName:'settings', 'Log-out':'logout'}
+        pages = {'Home':'home', 'Basket':'shopping_basket', 'Admin':'settings', 'Log-out':'logout'}
     else:
         pages= {'Home':'home', 'Basket':'shopping_basket', 'Log-In':'login', 'Sign-Up':'signup'}
     return pages
@@ -93,7 +93,7 @@ def updateBasket():
     return redirect('/basket')
 
 @app.route('/settings')
-@login_required
+@basic_auth.required
 def settings():
     pages = organise_pages()
     return redirect(url_for('user.index_view'))

@@ -178,19 +178,15 @@ def itemlist(search, mode):
 
     return render_template('itemlist.html', pages=pages, types=types, contents=contents, countries=countries, page_list=list(pages.keys()))
 
-@app.route('/admin')
+@app.route('/go_to_user_view')
 @login_required
-
-@basic_auth.required
 def adminpage():
     pages = organise_pages()
-    countries = []
-    types = []
-    for country in db.session.query(Item.ItemCountry).distinct():
-        countries.append(country)
-    for type in db.session.query(Item.ItemType).distinct():
-        types.append(type)
-    return render_template('admin.html', pages=pages, types=types, countries=countries, page_list=list(pages.keys()))
+    user = load_user(current_user.UserId)
+    if user.UserType == 'admin':
+        return redirect(url_for('user.index_view'))
+    else:
+        return '<h2>Sorry, you are not authorized for this action. Only admins can view the admin interface.</h2>'
 
 @app.route('/settings')
 @login_required

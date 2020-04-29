@@ -1,4 +1,5 @@
 from flask import render_template, url_for, redirect, jsonify, request, flash
+
 from shop import app, db, forms, login_manager, admin, basic_auth
 from shop.models import Item, User, Basket, WishList, OrderHistory
 from flask_login import login_required, login_user, current_user, logout_user
@@ -19,13 +20,26 @@ def organise_pages():
 @app.route('/')
 @app.route('/home')
 def home():
+    countries = []
+    types = []
+    for country in db.session.query(Item.ItemCountry).distinct():
+        countries.append(country)
+    for type in db.session.query(Item.ItemType).distinct():
+        types.append(type)
     pages = organise_pages()
-    return render_template('home.html', pages=pages, page_list=list(pages.keys()))
+    item = Item.query.all()
+    return render_template('home.html', pages=pages, item=item, countries=countries, types=types, info=info, page_list=list(pages.keys()))
 
 @app.route('/basket/')
 def shopping_basket():
-    pages = organise_pages()
-    if not current_user.is_anonymous:
+    countries = []
+    types = []
+    for country in db.session.query(Item.ItemCountry).distinct():
+        countries.append(country)
+    for type in db.session.query(Item.ItemType).distinct():
+        types.append(type)
+        contents = []
+        if not current_user.is_anonymous:
         contents = []
         user = load_user(current_user.UserId)
 
@@ -38,13 +52,51 @@ def shopping_basket():
         return render_template('basket.html', pages=pages, page_list=list(pages.keys()), contents=contents, totalprice=totalprice)
     return redirect('error')
 
+
+@app.route('/wishlist/<int:itemid>/<int:mode>')
+def wishlist(itemid, mode):
+    wishlistids = []
+    countries = []
+    types = []
+    already = ""
+    for country in db.session.query(Item.ItemCountry).distinct():
+        countries.append(country)
+    for type in db.session.query(Item.ItemType).distinct():
+        types.append(type)
+    pages=organise_pages()
+    itemi = itemid+1
+    user = load_user(current_user.UserId)
+    items = WishList.query.all()
+    for item in items:
+        wishlistids.append(item.ItemId)
+    if mode == 1:
+        if itemi not in wishlistids:
+            if itemid < db.session.query(Item).count():
+                addtowishlist=WishList(UserId=user.UserId, ItemId=itemi)
+                db.session.add(addtowishlist)
+        else:
+            already = "This item is already in the wishlist!"
+    if mode == 2:
+        WishList.query.filter_by(UserId=user.UserId).filter_by(ItemId=itemi).delete()
+    db.session.commit()
+    wish = WishList.query.all()
+    item = Item.query.all()
+    return render_template('wishlist.html', pages=pages, wishlist=wish, already=already, item=item, countries=countries, types=types, page_list=list(pages.keys()))
+
+
 @app.route('/checkout', methods=['GET', 'POST'])
 def checkout():
+    countries = []
+    types = []
+    for country in db.session.query(Item.ItemCountry).distinct():
+        countries.append(country)
+    for type in db.session.query(Item.ItemType).distinct():
+        types.append(type)
     pages = organise_pages()
     form = forms.Checkout()
     if form.validate_on_submit():
         return '<h1>Your order has been placed!</h1>'
-    return render_template('checkout.html', form=form, pages=pages, page_list=list(pages.keys()))
+    return render_template('checkout.html', form=form, countries=countries, types=types, pages=pages, page_list=list(pages.keys()))
 
 @app.route('/delete', methods=['GET','POST'])
 def delete():
@@ -62,6 +114,12 @@ def delete():
 
 @app.route('/signup', methods=['GET','POST'])
 def signup():
+    countries = []
+    types = []
+    for country in db.session.query(Item.ItemCountry).distinct():
+        countries.append(country)
+    for type in db.session.query(Item.ItemType).distinct():
+        types.append(type)
     pages = organise_pages()
     form = forms.RegisterForm()
     if form.validate_on_submit():
@@ -74,10 +132,16 @@ def signup():
         	db.session.add(new_user)
         	db.session.commit()
         	return '<h1>New user has been created!</h1>'
-    return render_template('signup.html', form=form, pages=pages, page_list=list(pages.keys()))
+    return render_template('signup.html', form=form, pages=pages, countries=countries, types=types, page_list=list(pages.keys()))
 
 @app.route('/login', methods=['GET','POST'])
 def login():
+    countries = []
+    types = []
+    for country in db.session.query(Item.ItemCountry).distinct():
+        countries.append(country)
+    for type in db.session.query(Item.ItemType).distinct():
+        types.append(type)
     pages = organise_pages()
     form = forms.LoginForm()
     if form.validate_on_submit():
@@ -87,7 +151,7 @@ def login():
                 login_user(user)
                 return redirect(url_for('shopping_basket'))
         return '<h1>Invalid username or password.</h1>'
-    return render_template('login.html', form=form, pages=pages, page_list=list(pages.keys()))
+    return render_template('login.html', form=form, pages=pages, countries=countries, types=types, page_list=list(pages.keys()))
 
 @app.route('/search', methods=["POST"])
 def search():
@@ -98,7 +162,7 @@ def search():
         itemResults.append(item.ItemName)
     return jsonify(result=itemResults)
 
-@app.route('/updateBasket/', methods=["GET","POST"])
+@app.route('/updateBasket', methods=["POST"])
 def updateBasket():
     user = load_user(current_user.UserId)
     itemId = request.args.get('item')
@@ -106,12 +170,51 @@ def updateBasket():
     db.session.commit()
     return redirect('/basket')
 
+
+@app.route('/itemlist/<string:search>/<int:mode>')
+def itemlist(search, mode):
+    pages = organise_pages()
+    contents = []
+    countries = []
+    types = []
+    for country in db.session.query(Item.ItemCountry).distinct():
+        countries.append(country)
+    for type in db.session.query(Item.ItemType).distinct():
+        types.append(type)
+    items = Item.query.all()
+    if mode == 1:
+        for item in items:
+            if item.ItemType == search:
+                contents.append(item)
+    if mode == 2:
+        for item in items:
+            if item.ItemCountry == search:
+                contents.append(item)
+    if mode == 3:
+        for item in items:
+            contents.append(item)
+
+    return render_template('itemlist.html', pages=pages, types=types, contents=contents, countries=countries, page_list=list(pages.keys()))
+
 @app.route('/settings')
 @login_required
 @basic_auth.required
 def settings():
     pages = organise_pages()
     return redirect(url_for('user.index_view'))
+
+@app.route('/info/<string:itemid>', methods=['GET'])
+def info(itemid):
+    countries = []
+    types = []
+    for country in db.session.query(Item.ItemCountry).distinct():
+        countries.append(country)
+    for type in db.session.query(Item.ItemType).distinct():
+        types.append(type)
+    pages = organise_pages()
+    item = Item.query.all()
+    return render_template('info.html', pages=pages, countries=countries, types=types, itemid=int(itemid)-1, item=item, page_list=list(pages.keys()))
+
 
 @app.route('/logout')
 @login_required

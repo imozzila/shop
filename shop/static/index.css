@@ -44,6 +44,48 @@ border-width: 20px;
 border-color: #ffd438;
 }
 
+h1{
+	color:#24305E;
+	font-family: "Roboto", cursive;
+
+}
+
+h2{
+	color:#24305E;
+	font-family: "Roboto", cursive;
+
+}
+
+h3{
+	color:#24305E;
+	font-family: "Roboto", cursive;
+
+}
+
+h5{
+	color:#24305E;
+	font-family: "Roboto", cursive;
+
+}
+
+
+a:link, a:visited {
+  color: #24305E;
+  display: inline-block;
+	font-weight: bold;
+
+}
+
+
+
+
+
+p{
+	color:#24305E;
+	font-family: "Roboto", cursive;
+
+}
+
 .banner > div > a > div{
   grid-area:title;
   font-size:30px;
@@ -73,6 +115,7 @@ border-color: #ffd438;
 }
 .rightside{
 	grid-area:rightside;
+	color:#A8D0E6;
 }
 
 .leftside, .rightside{

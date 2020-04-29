@@ -1,0 +1,7 @@
+{% extends "index.html" %}
+{% block content %}
+{% for items in contents %}
+<a href = '{{url_for('info', itemid = items.ItemId)}}'>{{ items.ItemName }}</a>
+<p>{{items.ItemDesc}}</p><h5> £{{items.ItemPrice}}</h5>
+{% endfor %}
+{% endblock %}

@@ -1,5 +1,5 @@
 from flask import render_template, url_for, redirect, jsonify, request, flash
-from shop import app, db, forms, login_manager, checkout
+from shop import app, db, forms, login_manager, admin, basic_auth
 from shop.models import Item, User, Basket, WishList, OrderHistory
 from flask_login import login_required, login_user, current_user, logout_user
 from flask_bcrypt import Bcrypt, check_password_hash, generate_password_hash
@@ -11,7 +11,7 @@ def organise_pages():
     if not current_user.is_anonymous:
         user = load_user(current_user.UserId)
         print(user)
-        pages = {'Home':'home', 'Basket':'shopping_basket', user.UserName:'settings', 'Log-out':'logout'}
+        pages = {'Home':'home', 'Basket':'shopping_basket', 'Admin':'settings', 'Log-out':'logout'}
     else:
         pages= {'Home':'home', 'Basket':'shopping_basket', 'Log-In':'login', 'Sign-Up':'signup'}
     return pages
@@ -45,6 +45,20 @@ def checkout():
     if form.validate_on_submit():
         return '<h1>Your order has been placed!</h1>'
     return render_template('checkout.html', form=form, pages=pages, page_list=list(pages.keys()))
+
+@app.route('/delete', methods=['GET','POST'])
+def delete():
+    form = forms.DeleteForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(UserName=form.username.data).first()
+        if user:
+            if check_password_hash(user.UserPassword, form.password.data):
+                db.session.delete(user)
+                db.session.commit()
+                return '<h1>Your account has been deleted.</h1>'
+        return '<h1>Invalid username or password.</h1>'
+    return render_template('delete.html', form=form)
+
 
 @app.route('/signup', methods=['GET','POST'])
 def signup():
@@ -94,9 +108,10 @@ def updateBasket():
 
 @app.route('/settings')
 @login_required
+@basic_auth.required
 def settings():
     pages = organise_pages()
-    return render_template('admin.html', pages=pages, page_list=list(pages.keys()))
+    return redirect(url_for('user.index_view'))
 
 @app.route('/logout')
 @login_required
@@ -113,3 +128,9 @@ def error():
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+admin.add_view(ModelView(User, db.session))
+admin.add_view(ModelView(Item, db.session))
+admin.add_view(ModelView(Basket, db.session))
+admin.add_view(ModelView(WishList, db.session))
+admin.add_view(ModelView(OrderHistory, db.session))

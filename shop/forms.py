@@ -3,6 +3,9 @@ from wtforms import StringField, PasswordField, IntegerField
 from wtforms.validators import InputRequired, Length, Email, EqualTo
 
 
+class DeleteForm(FlaskForm):
+    username = StringField('Username:', validators=[InputRequired()])
+    password = PasswordField('Password:', validators=[InputRequired()])
 
 class LoginForm(FlaskForm):
     username = StringField('Username:', validators=[InputRequired()])

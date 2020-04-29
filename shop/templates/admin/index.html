@@ -1,0 +1,29 @@
+{% extends 'admin/master.html' %}
+{% block body %}
+<a style="font-size: 150%;" href="{{ url_for('home') }}">The Little Cheese - Home</a>
+<div class="welcome">
+	<h3>Welcome to the admin section:</h3>
+</div>
+<div class="content">
+	<p>This interface allows you to handle all backend operations on this website.</br>
+	 Some of the many operations that you can perform:</p>
+	 <ul>
+	 	<li>Updating or deleting items in the product catalog.</li>
+	 	<li>Viewing products that are sold.</li>
+	 	<li>Viewing all the users that are registered on the website</li>
+	 	<li>Editing, adding or deleting users.</li>
+	 	<li>The list never ends...</li>
+	 </ul>
+</div>
+<style>
+	.welcome{color: #6699ff;
+	}
+	.content{font-size: 120%;
+		border-style: solid;
+		padding: 15px;
+		border-width: thin;
+		border-radius: 10px;
+		border-color: #D0D0D0;
+	}
+</style>
+{% endblock %}

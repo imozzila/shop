@@ -117,9 +117,13 @@ def checkout():
                 new_order = Orderhistory(UserId=user.UserId, ItemId=item.ItemId, OrderDate=date.today().strftime("%d/%m/%y"))
                 db.session.add(new_order)
             db.session.commit()
-            return '<h1>Your order has been placed!</h1>'
+            return redirect(url_for('succesfulorder'))
         return render_template('checkout.html', form=form, countries=countries, types=types, pages=pages, page_list=list(pages.keys()))
 
+@app.route('/successfulorder')
+def succesfulorder():
+    pages, countries, types=organise_pages()
+    return render_template('successfulorder.html', countries=countries, types=types, pages=pages, page_list=list(pages.keys()))
 
 @app.route('/delete', methods=['GET','POST'])
 @login_required

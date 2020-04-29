@@ -1,7 +1,9 @@
 {% extends "index.html" %}
 {% block content %}
 <h1>{{item[itemid].ItemName}}</h1>
-<h2>{{item[itemid].ItemDesc}}</h2>
+<h2>{{item[itemid].ItemDesc}}</h2><h3>£{{item[itemid].ItemPrice}}</h3>
 <a href='{{url_for('wishlist', itemid = itemid, mode = 1)}}'><input type="button" value="Add to wishlist"></a>
 <a href='{{url_for('wishlist', itemid = 5928329, mode = 1)}}'><input type="button" value="View Wishlist"></a>
+<h1></h1>
+<img src="{{url_for('static', filename='images/'+item[itemid].ItemLink)}}" width="300">
 {% endblock %}

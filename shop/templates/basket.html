@@ -10,14 +10,6 @@
 {%endblock%}
 {% block content %}
 <!-- We need a for loop here which prints each item in the basket-->
-<<<<<<< HEAD
-<form id="basket" action="{{url_for('updateBasket')}}">
-{% for item in contents %}
-<div name="{{item.ItemId}}">
-  {{ item.ItemName }}
-  {{ item.ItemPrice }}
-  <button type="submit" onsubmit="removeSelf({{item.ItemId}})">Remove</button>
-=======
 <div class="basket">
 <form method = "POST" id="basket">
 {% for item in contents %}
@@ -25,8 +17,9 @@
   <img src="{{url_for('static', filename='images/'+item.ItemLink)}}" />
   <div class="name">{{ item.ItemName }}</div>
   <div class="price">{{ item.ItemPrice }}</div>
-  <button type="submit" formaction="{{url_for('updateBasket')}}?item={{item.ItemId}}">Remove</button>
->>>>>>> origin/master
+  <div class="submit">
+    <input type="submit" value="Remove" formaction="{{url_for('updateBasket')}}?item={{item.ItemId}}"></input>
+  </div>
 </div>
 {% endfor %}
 </form>

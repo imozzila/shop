@@ -1,0 +1,18 @@
+form{
+  display:grid;
+  font-family:Baloo Thambi;
+}
+
+form > div{
+  display:grid;
+  padding:15px;
+  font-size:25px;
+}
+div > input{
+  width:200px;
+  height:30px;
+}
+
+form > div > label{
+  padding-right:50px;
+}

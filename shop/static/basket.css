@@ -1,0 +1,67 @@
+.sub_banner{
+  height:25px;
+  font-size:20px;
+  font-family:Baloo Thambi;
+  grid-area:banner;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background-color:#A8D0E6;
+  grid-gap: 20px;
+  color:#24305E;
+	font-family: "Roboto", cursive;
+  padding:10px;
+
+}
+
+.item{
+  display:grid;
+  grid-template-areas:
+  "image name price button";
+  grid-template-columns: repeat(4, 1fr);
+  padding:20px;
+}
+.item:nth-child(2n+1){
+  background-color:#dce65a;
+}
+.item:nth-child(2n){
+  background-color:#e4eb91;
+}
+
+div > img{
+  grid-area: image;
+  height:75px;
+  border-style:solid;
+
+}
+.name, .price, .submit{
+  font-family:Baloo Thambi;
+  font-size:15px;
+	position:relative;
+  top:25px;
+}
+.name{
+  grid-area:name;
+}
+.price{
+  grid-area:price;
+}
+
+.item > .submit{
+  grid-area:button;
+  font-family:Sniglet;
+  height:25px;
+}
+.submit > input{
+  height:40px;
+  width:250px;
+}
+.checkout{
+  padding-top:5px;
+  font-family:Baloo Thambi;
+  text-align:right;
+  font-size:30px;
+}
+.checkout > button{
+  height:40px;
+  width:250px;
+}

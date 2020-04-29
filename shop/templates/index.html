@@ -24,6 +24,10 @@
         </div>
       </div>
 
+
+
+
+
     <div class="banner">
       <div class="logo"><img src="{{url_for('static', filename='images/cheese_logo.png')}}"/></div>
       <div class="first"><a href={{url_for(pages[page_list[0]])}}><div> {{page_list[0]}}</div> </a></div>
@@ -38,9 +42,15 @@
 
         {% endblock sub_banner %}
       </div>
+
+
       {% block content %}
+
       {%  endblock content %}
     </div>
+
+
+
 
     <div class="rightside">
       <div class="countries">

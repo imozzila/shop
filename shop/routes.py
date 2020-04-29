@@ -1,5 +1,5 @@
 from flask import render_template, url_for, redirect, jsonify, request, flash
-from shop import app, db, forms, login_manager
+from shop import app, db, forms, login_manager, admin
 from shop.models import Item, User, Basket, WishList, OrderHistory
 from flask_login import login_required, login_user, current_user, logout_user
 from flask_bcrypt import Bcrypt, check_password_hash, generate_password_hash
@@ -96,7 +96,7 @@ def updateBasket():
 @login_required
 def settings():
     pages = organise_pages()
-    return render_template('admin.html', pages=pages, page_list=list(pages.keys()))
+    return redirect(url_for('user.index_view'))
 
 @app.route('/logout')
 @login_required
@@ -113,4 +113,9 @@ def error():
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
-#..
+
+admin.add_view(ModelView(User, db.session))
+admin.add_view(ModelView(Item, db.session))
+admin.add_view(ModelView(Basket, db.session))
+admin.add_view(ModelView(WishList, db.session))
+admin.add_view(ModelView(OrderHistory, db.session))

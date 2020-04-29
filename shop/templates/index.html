@@ -16,15 +16,13 @@
             Types of Cheese
           </div>
           <div class="list">
-            <div><a href="#">Hard Cheese</a></div>
-            <div><a href="#">Semi Hard Cheese</a></div>
-            <div><a href="#">Goat Cheese</a></div>
-          <div><a href="#">Blue Cheese</a></div>
-            <div><a href="#">Soft Cheese</a></div>
-            <div><a href="#">Fresh Cheese</a></div>
+        {% for type in types %}
+        <div><a href='{{url_for('itemlist', search = type.ItemType, mode = 1)}}'>{{type.ItemType}} cheese</a></div>
+        {% endfor %}
+
           </div>
+        </div>
       </div>
-    </div>
 
     <div class="banner">
       <div class="logo"><img src="{{url_for('static', filename='images/cheese_logo.png')}}"/></div>
@@ -50,44 +48,16 @@
             Countries
           </div>
           <div class="list">
-            <div><a href="#">United States</a></div>
-            <div><a href="#">Italy</a></div>
-            <div><a href="#">United Kingdom</a></div>
-            <div><a href="#">Netherlands</a></div>
-            <div><a href="#">Switzerland</a></div>
-            <div><a href="#">France</a></div>
+            {% for country in countries %}
+             <div><a href='{{url_for('itemlist', search = country.ItemCountry, mode = 2)}}'>{{country.ItemCountry}}</a></div>
+             {% endfor %}
           </div>
       </div>
     </div>
   </div>
 </body>
 <footer>
-  {% block script %}
-  <script type="text/javascript">
-    function addSubmit(ev) {
-      ev.preventDefault();
-      console.log('test')
-      var request = new XMLHttpRequest();
-      request.addEventListener('load', addShow);
-      request.open('POST', {{ url_for('search')|tojson }});
-      request.send(new FormData(this));
-    }
 
-    function addShow() {
-      var data = JSON.parse(this.responseText);
-      console.log(data)
-      var span = document.getElementById('result');
-      span.innerHTML = "";
-      for(i=0;i<data.result.length;i++){
-        span.innerHTML += data.result[i]+"<br>";
-      }
-
-    }
-
-    var form = document.getElementById('search_bar');
-    form.addEventListener('onkeyup', addSubmit);
-  </script>
-  {% endblock script %}
 </footer>
 
 </html>

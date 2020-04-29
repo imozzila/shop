@@ -34,13 +34,13 @@ def home():
 def shopping_basket():
     countries = []
     types = []
+    pages=organise_pages()
     for country in db.session.query(Item.ItemCountry).distinct():
         countries.append(country)
     for type in db.session.query(Item.ItemType).distinct():
         types.append(type)
         contents = []
-        if not current_user.is_anonymous:
-        contents = []
+    if not current_user.is_anonymous:
         user = load_user(current_user.UserId)
 
         basket = Basket.query.filter_by(UserId=user.UserId)

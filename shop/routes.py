@@ -46,6 +46,20 @@ def checkout():
         return '<h1>Your order has been placed!</h1>'
     return render_template('checkout.html', form=form, pages=pages, page_list=list(pages.keys()))
 
+@app.route('/delete', methods=['GET','POST'])
+def delete():
+    form = forms.DeleteForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(UserName=form.username.data).first()
+        if user:
+            if check_password_hash(user.UserPassword, form.password.data):
+                db.session.delete(user)
+                db.session.commit()
+                return '<h1>Your account has been deleted.</h1>'
+        return '<h1>Invalid username or password.</h1>'
+    return render_template('delete.html', form=form)
+
+
 @app.route('/signup', methods=['GET','POST'])
 def signup():
     pages = organise_pages()
@@ -93,6 +107,7 @@ def updateBasket():
     return redirect('/basket')
 
 @app.route('/settings')
+@login_required
 @basic_auth.required
 def settings():
     pages = organise_pages()

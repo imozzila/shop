@@ -99,7 +99,6 @@ def checkout():
     pages, countries, types = organise_pages()
     user = load_user(current_user.UserId)
     basket = Basket.query.filter_by(UserId=user.UserId)
-    print(basket.first())
     if not basket.first():
         return redirect(url_for('shopping_basket'))
     else:

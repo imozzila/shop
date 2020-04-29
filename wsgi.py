@@ -1,3 +1,3 @@
-from shop.config import app as application
+from shop import app
 if name == __main__:
     app.run(debug=True)

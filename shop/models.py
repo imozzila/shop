@@ -14,10 +14,11 @@ class Item(db.Model):
     ItemLink = db.Column(db.String(45), nullable=False)
 
 class User(UserMixin, db.Model):
-    UserId = db.Column(db.Integer, primary_key=True, nullable=False)
-    UserName = db.Column(db.String(255), nullable=False)
-    UserPassword = db.Column(db.String(255), nullable=False)
-    UserEmail = db.Column(db.String(255), nullable=False)
+    UserId = db.Column(db.Integer, primary_key=True)
+    UserName = db.Column(db.String(80))
+    UserPassword = db.Column(db.String(80))
+    UserEmail = db.Column(db.String(80))
+    #UserType = db.Column(db.String(80))
 
     def get_id(self):
         return self.UserId
